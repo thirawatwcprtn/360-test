@@ -1,0 +1,18 @@
+{
+  "name": "test-360",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@types/node": "^24.2.0"
+  },
+  "dependencies": {
+    "k6": "^0.0.0"
+  }
+}

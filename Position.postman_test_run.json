@@ -1,0 +1,168 @@
+{
+	"id": "2dd4fa4f-037a-41fe-839c-addf0a27a21e",
+	"name": "Position",
+	"timestamp": "2025-08-05T11:17:15.892Z",
+	"collection_id": "29352614-7628f4d9-f08b-4faf-b243-bb8196be1109",
+	"folder_id": 0,
+	"environment_id": "29352614-b1f53b05-24af-4426-91e4-1fa9e18efbb3",
+	"totalPass": 8,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-08-05T11:17:14.529Z",
+	"totalFail": 8,
+	"results": [
+		{
+			"id": "daaef696-060c-4868-b8ae-847f0bbbd2e0",
+			"name": "ทดสอบรับค่าและรับ TOKEN",
+			"url": "localhost:3000/api/auth/login",
+			"time": 47,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Successful POST request": false,
+				"Response time is less than 200ms": true,
+				"Status code name has string": false,
+				"Token is present in response": false,
+				"Token has correct length": false,
+				"Token format validation": false,
+				"Save token for future requests": true,
+				"Token length meets security standards": false,
+				"Advanced token analysis": false,
+				"Check token in response headers": true,
+				"Check token in nested response object": false,
+				"Token security validation": true,
+				"Generate token analysis report": true
+			},
+			"testPassFailCounts": {
+				"Successful POST request": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code name has string": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Token is present in response": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Token has correct length": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Token format validation": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Save token for future requests": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Token length meets security standards": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Advanced token analysis": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Check token in response headers": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Check token in nested response object": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Token security validation": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Generate token analysis report": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				47
+			],
+			"allTests": [
+				{
+					"Successful POST request": false,
+					"Response time is less than 200ms": true,
+					"Status code name has string": false,
+					"Token is present in response": false,
+					"Token has correct length": false,
+					"Token format validation": false,
+					"Save token for future requests": true,
+					"Token length meets security standards": false,
+					"Advanced token analysis": false,
+					"Check token in response headers": true,
+					"Check token in nested response object": false,
+					"Token security validation": true,
+					"Generate token analysis report": true
+				}
+			]
+		},
+		{
+			"id": "559dfabc-1be7-4251-a220-dc9090fc1e15",
+			"name": "ทดสอบรับค่าตำแหน่ง",
+			"url": "localhost:3000/admin/position",
+			"time": 122,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 200ms": true,
+				"Check that 'id' is present and not null": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Check that 'id' is present and not null": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				122
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 200ms": true,
+					"Check that 'id' is present and not null": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 169,
+	"collection": {
+		"requests": [
+			{
+				"id": "daaef696-060c-4868-b8ae-847f0bbbd2e0",
+				"method": "POST"
+			},
+			{
+				"id": "559dfabc-1be7-4251-a220-dc9090fc1e15",
+				"method": "GET"
+			}
+		]
+	}
+}

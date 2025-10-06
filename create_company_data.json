@@ -1,0 +1,62 @@
+{
+  "companies": [
+    {
+      "code": "Corporation",
+      "slug": "Corporation",
+      "name": "Corporation",
+      "description": "Leading technology company",
+      "note": "Internal note about company",
+      "phone": "+66-2-123-4567",
+      "email": "contact@acme.co.th",
+      "website": "https://acme.co.th/",
+      "metadata": {
+        "industry": "Technology",
+        "employees": 500
+      },
+      "status": "ACTIVE"
+    },{
+      "code": "TOA ",
+      "slug": "TOA ",
+      "name": "TOA Corporation",
+      "description": "Leading technology company",
+      "note": "Internal note about company",
+      "phone": "+66-2-123-4567",
+      "email": "contact@acme.co.th",
+      "website": "https://acme.co.th/",
+      "metadata": {
+        "industry": "Color Technology",
+        "employees": 1000
+      },
+      "status": "ACTIVE"
+    },{
+      "code": "Mink ",
+      "slug": "Mink ",
+      "name": "Mink Corporation",
+      "description": "Leading technology company",
+      "note": "Internal note about company",
+      "phone": "+66-2-123-4567",
+      "email": "contact@acme.co.th",
+      "website": "https://acme.co.th/",
+      "metadata": {
+        "industry": "Technology",
+        "employees": 500
+      },
+      "status": "ACTIVE"
+    },{
+      "code": "Mai ",
+      "slug": "Mai ",
+      "name": "Mai Corporation",
+      "description": "Leading technology company",
+      "note": "Internal note about company",
+      "phone": "+66-2-123-4567",
+      "email": "contact@acme.co.th",
+      "website": "https://acme.co.th/",
+      "metadata": {
+        "industry": "Technology",
+        "employees": 500
+      },
+      "status": "ACTIVE"
+    }
+
+  ]
+}
