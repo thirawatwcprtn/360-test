@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.setTimeout(90000);
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://web-survey-staging-4c6vqhmawq-as.a.run.app/reviewer/087a4817-1dae-4710-9c08-f61fd09d657e/xkox5sdqkugsk9vkni1lys/welcome');
+  await page.goto('https://web-survey-sandbox01-4c6vqhmawq-as.a.run.app/reviewer/a17cc6fa-bfa3-486c-84f3-4a859c27ab56/xgwr4efgnesuipgt8yqtd/welcome');
   await page.waitForLoadState('networkidle');
 });
 
@@ -12,7 +12,7 @@ test('Survey Completed 14/14', async ({ page }) => {
   await page.getByRole('button', { name: 'Start Survey' }).click();
   
   // Verify survey info
-  await expect(page.locator('[id="__next"]')).toContainText('Survey 681224 on staging');
+  await expect(page.locator('[id="__next"]')).toContainText('Survey 6812252 on sandbox01');
   await expect(page.locator('[id="__next"]')).toContainText('0/14 questions');
   
   // First Start Review button
