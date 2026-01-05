@@ -1,0 +1,110 @@
+{
+  "info": {
+    "_postman_id": "5f9caa52-3206-4287-aa10-e6bdd9efca71",
+    "name": "Admin Employee Survey",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ค้นหาทั้งหมดreviwers",
+      "id": "f47dacc9-655e-4802-94f0-7642c55592d1",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee-reviews/reviewers",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "reviewers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหาแบบใส่ข้อมูล",
+      "id": "38410b0f-219b-4eae-b19a-567138760091",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee-reviews/reviewers?surveyId=1&employeeId=XJ9fWr0cv7&reviewerId=ei9HSgwB&reviewType=PEER&status=PENDING",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "reviewers"
+          ],
+          "query": [
+            {
+              "key": "surveyId",
+              "value": "1"
+            },
+            {
+              "key": "employeeId",
+              "value": "XJ9fWr0cv7"
+            },
+            {
+              "key": "reviewerId",
+              "value": "ei9HSgwB"
+            },
+            {
+              "key": "reviewType",
+              "value": "PEER"
+            },
+            {
+              "key": "status",
+              "value": "PENDING"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

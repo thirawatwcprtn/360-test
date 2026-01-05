@@ -1,0 +1,854 @@
+{
+  "info": {
+    "_postman_id": "f319e018-215d-48ca-86f4-ddd77fba79ef",
+    "name": "Login",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login and get token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "pm.environment.set(\"token\", pm.response.json().data.token)",
+              "",
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"TC2: Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"TC3: Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"TC4: Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"TC5: Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC6: Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC7 :Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              "pm.test(\"TC8: Response has non-empty token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"data\");",
+              "    pm.expect(jsonData.data).to.have.property(\"token\");",
+              "    ",
+              "    const token = jsonData.data.token;",
+              "    pm.expect(token).to.be.a(\"string\").and.not.empty;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8bf01559-97b3-4fb7-9feb-04f99b41e332",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "e9dba13e-277f-4a9b-a987-565f7e0eb1cf",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\n//   \"username\": \"admin-rl\",\n//   \"password\": \"1234\"\n// }\n\n// Env_Mink\n// {\n//   \"username\": \"admin\",\n//   \"password\": \"admin12345678\"\n// }\n{\n//   \"username\": \"admin\",\n//   \"password\": \"test1234\"\n\n  \"username\": \"admin\",\n  \"password\": \"test_q3409\"\n\n}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/auth/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login and get token Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "pm.environment.set(\"token\", pm.response.json().data.token)",
+              "",
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"TC2: Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"TC3: Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"TC4: Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"TC5: Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC6: Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC7 :Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              "pm.test(\"TC8: Response has non-empty token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"data\");",
+              "    pm.expect(jsonData.data).to.have.property(\"token\");",
+              "    ",
+              "    const token = jsonData.data.token;",
+              "    pm.expect(token).to.be.a(\"string\").and.not.empty;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8bf01559-97b3-4fb7-9feb-04f99b41e332",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "397857b9-fcb0-457b-8ba7-9d14d6416164",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\n//   \"username\": \"admin-rl\",\n//   \"password\": \"1234\"\n// }\n\n// Env_Mink\n// {\n//   \"username\": \"admin\",\n//   \"password\": \"admin12345678\"\n// }\n{\n  \"username\": \"admin\",\n  \"password\": \"test_q3409\"\n}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login and get token Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "pm.environment.set(\"token\", pm.response.json().data.token)",
+              "",
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"TC2: Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"TC3: Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"TC4: Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"TC5: Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC6: Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC7 :Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              "pm.test(\"TC8: Response has non-empty token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"data\");",
+              "    pm.expect(jsonData.data).to.have.property(\"token\");",
+              "    ",
+              "    const token = jsonData.data.token;",
+              "    pm.expect(token).to.be.a(\"string\").and.not.empty;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "bbf23d8c-55b4-4cbc-b909-8c34fa61984d",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Blue@sky\"\n}\n\n// Env_Mink\n// {\n//   \"username\": \"admin\",\n//   \"password\": \"admin12345678\"\n// }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Demo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "// ===========================================",
+              "// ❌ NEGATIVE TEST CASES: LOGIN FAIL",
+              "// ===========================================",
+              "",
+              "// TC1: ตรวจสอบว่า Login Fail ต้องได้ status code 401 หรือ 403",
+              "pm.test(\"TC1: Login Fail returns 401/403\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+              "});",
+              "",
+              "// TC2: ตรวจสอบว่า response ไม่มี token",
+              "pm.test(\"TC2: Response should not contain token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const possibleTokens = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.data?.token",
+              "    ];",
+              "",
+              "    const hasToken = possibleTokens.some(t => typeof t === \"string\" && t.length > 0);",
+              "    pm.expect(hasToken, \"Response should not include token\").to.be.false;",
+              "});",
+              "",
+              "// TC3: ตรวจสอบข้อความ error ที่ถูกต้อง",
+              "pm.test(\"TC3: Response contains error message\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"error\");",
+              "    pm.expect(jsonData.error).to.be.a(\"string\").and.not.empty;",
+              "    console.log(\"🚨 Error message:\", jsonData.error);",
+              "});",
+              "",
+              "// TC4: ตรวจสอบ response time (แม้จะ fail ก็ต้องเร็ว)",
+              "pm.test(\"TC4: Response time < 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "// TC5: ตรวจสอบว่าไม่ได้ set ค่า auth_token ใน environment",
+              "pm.test(\"TC5: auth_token should not be set in environment\", function () {",
+              "    const envToken = pm.environment.get(\"auth_token\");",
+              "    pm.expect(envToken, \"auth_token should not exist after failed login\").to.be.null;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "9a8f89b5-ebd9-4835-b664-cedb289f3bbd",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin-rl\",\n  \"password\": \"1234\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/auth/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างemployee 1 คน Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "d23ce2d2-f6d9-45d6-a7d1-27b015be22d9",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "pm.test(\"Content-Type is present\", function () {",
+              "    pm.response.to.have.header(\"Content-Type\");",
+              "});",
+              "pm.test(\"Your test name\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.value).to.eql(100);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.expect(pm.response.code).to.equal(400);",
+              "});",
+              "",
+              "pm.test(\"Response contains statusCode\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('statusCode');",
+              "});",
+              "",
+              "pm.test(\"Response contains error message\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('message').that.is.an('array').that.is.not.empty;",
+              "});",
+              "",
+              "pm.test(\"Error message should specify email issue\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.message).to.include(\"email must be an email\");",
+              "});",
+              "",
+              "pm.test(\"Response contains error type\", function () {",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.property('error').that.equals(\"Bad Request\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "fdf70d5a-4e28-4f70-a4fa-81cbad4f742a",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n      \"companyId\": \"8_p9\",\n      \"email\": \"sarunya46mk@gmail.com\",\n      \"firstname\": \"sarunya\",\n      \"lastname\": \"m\",\n      \"middlename\": \"Smith\",\n      \"phone\": \"+66-8-123-4567\",\n      \"departmentId\": \"boZAd\",\n      \"positionId\": \"XgjIt\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Senior Software Engineer\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2025-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างbulk employee Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "c784e4e4-704b-4ba7-bd5d-929ae0e184a6",
+            "exec": [
+              "",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "var schema = {",
+              "    \"items\": {",
+              "        \"type\": \"boolean\"",
+              "    }",
+              "};",
+              "",
+              "var data1 = [true, false];",
+              "var data2 = [true, 123];",
+              "",
+              "pm.test('Schema is valid', function () {",
+              "    pm.expect(tv4.validate(data1, schema)).to.be.true;",
+              "    pm.expect(tv4.validate(data2, schema)).to.be.true;",
+              "});",
+              "",
+              "pm.test(\"Content-Type is present\", function () {",
+              "    pm.response.to.have.header(\"Content-Type\");",
+              "});",
+              "pm.test(\"Your test name\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.value).to.eql(100);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "872ecc4b-a238-453c-910d-1d037bca657b",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employees\": [\n    {\n      \"companyId\": \"8_p9\",\n      \"email\": \"thirawatw.works@gmail.com\",\n      \"firstname\": \"thrawat\",\n      \"lastname\": \"w\",\n      \"middlename\": \"Smith\",\n      \"phone\": \"+66-8-123-4567\",\n      \"departmentId\": \"boZAd\",\n      \"positionId\": \"XgjIt\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Senior Software Engineer\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2025-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    },{\n      \"companyId\": \"8_p9\",\n      \"email\": \"supakorn.code@gmail.com\",\n      \"firstname\": \"supakorn\",\n      \"lastname\": \"p\",\n      \"middlename\": \"Smith\",\n      \"phone\": \"+66-8-123-4567\",\n      \"departmentId\": \"boZAd\",\n      \"positionId\": \"XgjIt\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Senior Software Engineer\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2025-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    },{\n      \"companyId\": \"8_p9\",\n      \"email\": \"thitiwut.ek@gmail.com\",\n      \"firstname\": \"thitiwut\",\n      \"lastname\": \"e\",\n      \"middlename\": \"Smith\",\n      \"phone\": \"+66-8-123-4567\",\n      \"departmentId\": \"boZAd\",\n      \"positionId\": \"XgjIt\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Senior Software Engineer\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2025-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee/bulk/create",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

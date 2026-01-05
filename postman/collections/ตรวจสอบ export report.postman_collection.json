@@ -1,0 +1,145 @@
+{
+  "info": {
+    "_postman_id": "4b39e269-425c-4954-9baf-2ff9de729df5",
+    "name": "ตรวจสอบ export report",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ตรวจสอบ survey สามารถ download report ได้",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7111a281-32f1-4646-afc8-bafdb5b2dbcd",
+            "exec": [
+              "pm.test(\"TC-Report สามารถดาวน์โหลดไฟล์ได้\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "d7c6413f-0987-4975-9940-487a22030aa9",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/export",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "export"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ตรวจสอบ survey สามารถ download report raw ได้",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7111a281-32f1-4646-afc8-bafdb5b2dbcd",
+            "exec": [
+              "pm.test(\"TC-Report สามารถดาวน์โหลดไฟล์ได้\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "packages": {},
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "id": "016d30b6-63dd-45b8-939c-f803d6cce03d",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/export/raw",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "export",
+            "raw"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "149216aa-c3cb-4922-a8bc-03f631c739d1",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "37c4c889-ef47-4795-bd67-055a6bfd4f19",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

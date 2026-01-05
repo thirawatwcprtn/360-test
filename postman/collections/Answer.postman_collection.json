@@ -1,0 +1,30 @@
+{
+  "info": {
+    "_postman_id": "4987a9a1-8859-47f1-9fd4-cdba62ef3bbf",
+    "name": "Answer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Untitled Request",
+      "id": "ee5c6f70-d88a-47e3-816a-122a88194177",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"answers\": [\n        {\n            \"id\": 67,\n            \"choices\": [],\n            \"childrens\": [],\n            \"ratingValue\": 5\n        }\n    ],\n    \"progress\": {\n        \"JnhgzhEF\": {\n            \"completed\": 1,\n            \"total\": 2\n        }\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    }
+  ]
+}

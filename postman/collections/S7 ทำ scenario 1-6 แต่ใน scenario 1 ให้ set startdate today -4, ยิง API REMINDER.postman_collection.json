@@ -1,0 +1,8 @@
+{
+  "info": {
+    "_postman_id": "9bf29efa-1abe-4577-ad05-3431d29827ab",
+    "name": "S7 ทำ scenario 1-6 แต่ใน scenario 1 ให้ set startdate today -4, ยิง API REMINDER",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": []
+}

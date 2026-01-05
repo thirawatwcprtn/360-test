@@ -1,0 +1,349 @@
+{
+  "info": {
+    "_postman_id": "dfceecdb-f854-41ae-978d-b47d5c3cb122",
+    "name": "Repo_เก่า",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "เข้าหน้าHome",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "96ed53e6-1201-4106-9f06-f6bcd7e6e243",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "pm.test(\"ค้นหาคำว่า Campaign\", function () {",
+              "    pm.expect(pm.response.text()).to.include('Campaign');",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "99271ec2-8a12-46d2-8384-f07a8b3103f4",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "qa_sky201",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "admin-test",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://110.78.231.19:10800/home",
+          "protocol": "http",
+          "host": [
+            "110",
+            "78",
+            "231",
+            "19"
+          ],
+          "port": "10800",
+          "path": [
+            "home"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ตรวจสอบหน้า campaign หน้าทดสอบ",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "570b027b-e953-4506-be71-bc08d43a4a38",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "83837a94-99f5-403a-b5a2-e7243a59385c",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "host",
+            "value": "110.78.231.19:10800"
+          },
+          {
+            "key": "proxy-connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "upgrade-insecure-requests",
+            "value": "1"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+          },
+          {
+            "key": "accept",
+            "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+          },
+          {
+            "key": "accept-encoding",
+            "value": "gzip, deflate"
+          },
+          {
+            "key": "accept-language",
+            "value": "en-US,en;q=0.9"
+          },
+          {
+            "key": "cookie",
+            "value": "auth-user=%7B%22id%22%3A%22e8963a20-9727-418f-9c1c-5693f9b4839f%22%2C%22username%22%3A%22admin-test%22%2C%22name%22%3A%22admin%20test%22%2C%22role%22%3A%22MASTER%22%2C%22permissions%22%3A%5B%5D%7D; auth-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU4OTYzYTIwLTk3MjctNDE4Zi05YzFjLTU2OTNmOWI0ODM5ZiIsInVzZXJuYW1lIjoiYWRtaW4tdGVzdCIsIm5hbWUiOiJhZG1pbiB0ZXN0Iiwicm9sZSI6Ik1BU1RFUiIsInBlcm1pc3Npb25zIjpbXSwiaWF0IjoxNzU0MzY0MDkxLCJleHAiOjE3NTQ0MDAwOTF9.UkM5C3khIXf0gs3JVhgKXd6j597jMyVpk37vmvzBloY"
+          },
+          {
+            "key": "if-none-match",
+            "value": "\"rjnrqpga1d10y0\""
+          }
+        ],
+        "url": {
+          "raw": "{{Base_URL}}/campaign",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "campaign"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหาIDของ company Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "205a3302-f342-4604-945e-888b73c23a91",
+            "exec": [
+              "pm.test(\"Status code is 200 and OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.response.to.have.status(\"OK\");",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "ce5a286f-9f16-4a92-872c-cff1c2546fe0",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM3ODM2OSwiZXhwIjoxNzU0NDE0MzY5fQ.oEmlZOGApKlPiPQfWeC1hyTvrp4_gASaUjcWrtqeaPE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/company/",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหาIDของ company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "205a3302-f342-4604-945e-888b73c23a91",
+            "exec": [
+              "pm.test(\"Status code is 200 and OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.response.to.have.status(\"OK\");",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "203bbf9e-fceb-4fc8-a3e0-b43118f8a005",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM3ODM2OSwiZXhwIjoxNzU0NDE0MzY5fQ.oEmlZOGApKlPiPQfWeC1hyTvrp4_gASaUjcWrtqeaPE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_Oat_URL}}/admin/company/kiG4",
+          "host": [
+            "{{Base_Oat_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "kiG4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหาหน้าcampaing",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "93926579-8b2e-4d37-a9d0-29b68ae74a47",
+            "exec": [
+              "pm.test(\"Status code is 200 and OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.response.to.have.status(\"OK\");",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "pm.test(\"Body matches string\", function () {",
+              "    pm.expect(pm.response.text()).to.include(\"string_you_want_to_search\");",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "cdfb99a4-aae5-432e-a1ed-58ff5dc77e72",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "host",
+            "value": "110.78.231.19:10800"
+          },
+          {
+            "key": "proxy-connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+          },
+          {
+            "key": "accept",
+            "value": "application/json, text/plain, */*"
+          },
+          {
+            "key": "referer",
+            "value": "http://110.78.231.19:10800/campaign/20/edit"
+          },
+          {
+            "key": "accept-encoding",
+            "value": "gzip, deflate"
+          },
+          {
+            "key": "accept-language",
+            "value": "en-US,en;q=0.9"
+          },
+          {
+            "key": "cookie",
+            "value": "auth-user=%7B%22id%22%3A%22e8963a20-9727-418f-9c1c-5693f9b4839f%22%2C%22username%22%3A%22admin-test%22%2C%22name%22%3A%22admin%20test%22%2C%22role%22%3A%22MASTER%22%2C%22permissions%22%3A%5B%5D%7D; auth-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU4OTYzYTIwLTk3MjctNDE4Zi05YzFjLTU2OTNmOWI0ODM5ZiIsInVzZXJuYW1lIjoiYWRtaW4tdGVzdCIsIm5hbWUiOiJhZG1pbiB0ZXN0Iiwicm9sZSI6Ik1BU1RFUiIsInBlcm1pc3Npb25zIjpbXSwiaWF0IjoxNzU0MzY0MDkxLCJleHAiOjE3NTQ0MDAwOTF9.UkM5C3khIXf0gs3JVhgKXd6j597jMyVpk37vmvzBloY"
+          },
+          {
+            "key": "if-none-match",
+            "value": "\"13ipzfd0j4nyc\""
+          }
+        ],
+        "url": {
+          "raw": "{{Base_URL}}/api/backend/api/sites",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "api",
+            "backend",
+            "api",
+            "sites"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

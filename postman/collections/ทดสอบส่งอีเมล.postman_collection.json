@@ -1,0 +1,96 @@
+{
+  "info": {
+    "_postman_id": "fcf62b7e-b2a5-44c0-be0e-20505cb1bd33",
+    "name": "ทดสอบส่งอีเมล",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "sendemail",
+      "id": "62340950-286d-4db4-977c-4ec96e03f237",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeEmail\": \"thirawat.w@relearnsolution.co.th\",\n  \"emailType\": \"REMINDER\",\n  \"templateType\": \"HTML\",\n  \"locale\": \"EN\"\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/admin/survey/9/email-templates/force-send",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "9",
+            "email-templates",
+            "force-send"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-tempalate-preview",
+      "id": "9bccee75-4db5-4cbf-9265-5c4065a0884c",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailType\": \"INVITATION\",\n    \"locale\": \"EN\",\n    \"toEmail\": \"thirawat.w@relearnsolution.co.th\",\n    \"subject\": \"Email Subject EN\",\n    \"body\": \"<p>Dear {reviewer_name},</p><p>I hope this message finds you well.</p><p>{company_name} is implementing a 360-degree feedback program to support employee development by providing valuable insights from multiple perspectives.</p><p><strong>Assessment Details:</strong></p><ul><li>Survey Name: {survey_name}</li><li>Participant: {reviewee_name}</li><li>Due Date: {due_date}</li><li>Time Required: Approximately 15-20 minutes</li><li>Confidentiality: All responses are confidential and will be aggregated for reporting</li></ul><p><strong>How to Participate:</strong></p><ol><li>Click on the assessment link: {survey_url}</li><li>Complete all sections of the questionnaire</li></ol><p><strong>Assessment Areas:</strong></p><ul><li>Collaboration &amp; Teamwork</li><li>Leadership Capabilities</li><li>Communication Skills</li><li>Problem-Solving</li><li>Adaptability</li><li>Strengths and Development Opportunities</li></ul><p>This assessment is purely for development purposes and is not linked to performance evaluations. Your honest, constructive feedback will help {reviewee_name} identify growth opportunities and leverage their strengths.</p><p><strong>Important Note:</strong> Please complete your assessment by {due_date}. We have {remaining_days} days remaining to ensure timely completion.</p><p>If you have any questions or technical issues, please contact our HR team.</p><p>Thank you for your participation in supporting your colleague's professional development at {company_name}.</p><p>Best regards, Human Resources Department {company_name}</p>\",\n    \"templateType\": \"HTML\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://test-survey-backoffice.relearn-solution.com/api/backend/admin/survey/9/email-templates/send-template-preview",
+          "protocol": "https",
+          "host": [
+            "test-survey-backoffice",
+            "relearn-solution",
+            "com"
+          ],
+          "path": [
+            "api",
+            "backend",
+            "admin",
+            "survey",
+            "9",
+            "email-templates",
+            "send-template-preview"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

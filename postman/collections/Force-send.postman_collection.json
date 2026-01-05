@@ -1,0 +1,69 @@
+{
+  "info": {
+    "_postman_id": "c7f46ee0-0f95-4e3e-83a6-4338b0ef60e6",
+    "name": "Force-send",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "force-send email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7bf3b744-b6fe-497e-8a02-ee323f88e709",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "dfe6c693-cc58-49c0-90b8-b251fff442fa",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    //เปลี่ยนแต่ employee-email \n  \"employeeEmail\": \"thirawat.w@relearnsolution.co.th\",\n  \"emailType\": \"INVITATION\",\n  \"templateType\": \"HTML\",\n  \"locale\": \"EN\"\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/email-templates/force-send",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "email-templates",
+            "force-send"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

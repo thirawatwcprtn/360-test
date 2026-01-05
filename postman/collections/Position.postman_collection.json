@@ -1,0 +1,485 @@
+{
+  "info": {
+    "_postman_id": "7628f4d9-f08b-4faf-b243-bb8196be1109",
+    "name": "Position",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ทดสอบรับค่าและรับ TOKEN",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "",
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "pm.test(\"Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🔐 POSTMAN TOKEN VALIDATION TEST SCRIPTS",
+              "// ===========================================",
+              "",
+              "// Test 1: ✅ ตรวจสอบว่ามี token ส่งมาหรือไม่",
+              "pm.test(\"Token is present in response\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบว่ามี property token",
+              "    pm.expect(jsonData).to.have.property('token');",
+              "    ",
+              "    // ตรวจสอบว่า token ไม่เป็น null หรือ undefined",
+              "    pm.expect(jsonData.token).to.not.be.null;",
+              "    pm.expect(jsonData.token).to.not.be.undefined;",
+              "    ",
+              "    // ตรวจสอบว่า token ไม่เป็นค่าว่าง",
+              "    pm.expect(jsonData.token).to.not.be.empty;",
+              "    ",
+              "    console.log(\"✅ Token found:\", jsonData.token);",
+              "});",
+              "",
+              "// Test 2: 📏 ตรวจสอบจำนวนตัวอักษรของ token",
+              "pm.test(\"Token has correct length\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token;",
+              "    ",
+              "    // นับจำนวนตัวอักษร",
+              "    const tokenLength = token.length;",
+              "    ",
+              "    // ตรวจสอบความยาวของ token (adjust ตามที่ต้องการ)",
+              "    pm.expect(tokenLength).to.be.greaterThan(0, \"Token should not be empty\");",
+              "    pm.expect(tokenLength).to.be.at.least(10, \"Token should be at least 10 characters\");",
+              "    ",
+              "    // สำหรับ JWT token ปกติจะยาวประมาณ 100+ characters",
+              "    // pm.expect(tokenLength).to.be.at.least(100, \"JWT token should be at least 100 characters\");",
+              "    ",
+              "    console.log(\"📏 Token length:\", tokenLength, \"characters\");",
+              "    console.log(\"🔤 Token content:\", token);",
+              "});",
+              "",
+              "// Test 3: 🔍 ตรวจสอบรูปแบบของ token (Optional)",
+              "pm.test(\"Token format validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token;",
+              "    ",
+              "    // ตรวจสอบว่าเป็น string",
+              "    pm.expect(token).to.be.a('string');",
+              "    ",
+              "    // ตรวจสอบว่าไม่มี whitespace",
+              "    pm.expect(token.trim()).to.equal(token, \"Token should not have leading/trailing spaces\");",
+              "    ",
+              "    // ตรวจสอบรูปแบบ JWT (ถ้าเป็น JWT token)",
+              "    // JWT มี format: header.payload.signature (3 ส่วนคั่นด้วย .)",
+              "    const jwtPattern = /^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$/;",
+              "    if (token.includes('.')) {",
+              "        pm.expect(token).to.match(jwtPattern, \"Token should be valid JWT format\");",
+              "        console.log(\"🎯 Valid JWT format detected\");",
+              "    }",
+              "    ",
+              "    console.log(\"✅ Token format is valid\");",
+              "});",
+              "",
+              "// Test 4: 💾 บันทึก token ไว้ใช้ใน request ถัดไป",
+              "pm.test(\"Save token for future requests\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token;",
+              "    ",
+              "    if (token) {",
+              "        // บันทึกใน environment variable",
+              "        pm.environment.set(\"auth_token\", token);",
+              "        ",
+              "        // บันทึกใน global variable (ใช้ได้ทั้ง collection)",
+              "        pm.globals.set(\"auth_token\", token);",
+              "        ",
+              "        // บันทึก timestamp ที่ได้ token",
+              "        pm.environment.set(\"token_timestamp\", Date.now());",
+              "        ",
+              "        console.log(\"💾 Token saved to environment variables\");",
+              "        console.log(\"🕐 Token received at:\", new Date().toISOString());",
+              "    }",
+              "});",
+              "",
+              "// Test 5: 📊 ตรวจสอบ token length ตามมาตรฐานต่างๆ",
+              "pm.test(\"Token length meets security standards\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token;",
+              "    const tokenLength = token.length;",
+              "    ",
+              "    // กำหนดเกณฑ์ความยาวตาม token type",
+              "    const tokenStandards = {",
+              "        \"API Key\": { min: 32, max: 64 },",
+              "        \"JWT\": { min: 100, max: 2048 },",
+              "        \"Bearer\": { min: 40, max: 255 },",
+              "        \"Session\": { min: 16, max: 128 }",
+              "    };",
+              "    ",
+              "    // ตรวจสอบตามมาตรฐาน JWT (ปรับได้ตามต้องการ)",
+              "    const minLength = 32;  // ความยาวขั้นต่ำ",
+              "    const maxLength = 2048; // ความยาวสูงสุด",
+              "    ",
+              "    pm.expect(tokenLength).to.be.at.least(minLength, `Token should be at least ${minLength} characters`);",
+              "    pm.expect(tokenLength).to.be.at.most(maxLength, `Token should not exceed ${maxLength} characters`);",
+              "    ",
+              "    // แสดงผล analysis",
+              "    let tokenType = \"Unknown\";",
+              "    if (tokenLength >= 100 && token.includes('.')) {",
+              "        tokenType = \"JWT\";",
+              "    } else if (tokenLength >= 32 && tokenLength <= 64) {",
+              "        tokenType = \"API Key\";",
+              "    } else if (tokenLength >= 16 && tokenLength <= 128) {",
+              "        tokenType = \"Session Token\";",
+              "    }",
+              "    ",
+              "    console.log(\"🏷️  Detected token type:\", tokenType);",
+              "    console.log(\"📏 Token length:\", tokenLength, \"characters\");",
+              "    console.log(\"✅ Token meets security standards\");",
+              "});",
+              "",
+              "// Test 6: 🎯 Advanced Token Analysis",
+              "pm.test(\"Advanced token analysis\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token;",
+              "    ",
+              "    // Character composition analysis",
+              "    const hasUppercase = /[A-Z]/.test(token);",
+              "    const hasLowercase = /[a-z]/.test(token);",
+              "    const hasNumbers = /[0-9]/.test(token);",
+              "    const hasSpecialChars = /[^A-Za-z0-9]/.test(token);",
+              "    ",
+              "    // Log character composition",
+              "    console.log(\"🔤 Token Character Analysis:\");",
+              "    console.log(\"   - Contains uppercase:\", hasUppercase);",
+              "    console.log(\"   - Contains lowercase:\", hasLowercase);",
+              "    console.log(\"   - Contains numbers:\", hasNumbers);",
+              "    console.log(\"   - Contains special chars:\", hasSpecialChars);",
+              "    ",
+              "    // JWT specific analysis",
+              "    if (token.includes('.')) {",
+              "        const parts = token.split('.');",
+              "        console.log(\"🎯 JWT Token Analysis:\");",
+              "        console.log(\"   - Header length:\", parts[0] ? parts[0].length : 0);",
+              "        console.log(\"   - Payload length:\", parts[1] ? parts[1].length : 0);",
+              "        console.log(\"   - Signature length:\", parts[2] ? parts[2].length : 0);",
+              "        console.log(\"   - Total parts:\", parts.length);",
+              "        ",
+              "        pm.expect(parts.length).to.equal(3, \"JWT should have exactly 3 parts\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🔄 ALTERNATIVE RESPONSE STRUCTURES",
+              "// ===========================================",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "daaef696-060c-4868-b8ae-847f0bbbd2e0",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"1234\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Local_URL}}/api/auth/login",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบรับค่าตำแหน่ง",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "f0b2e83a-cd55-42d8-a9a8-5a944a11af4e",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "pm.test(\"Check that 'id' is present and not null\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบว่า key 'id' มีอยู่ใน jsonData และไม่เป็น null หรือ undefined",
+              "    // pm.expect(jsonData).to.have.property(\"id\");",
+              "    pm.expect(jsonData.id).to.not.be.null;",
+              "    // pm.expect(jsonData.id).to.not.be.undefined;",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "559dfabc-1be7-4251-a220-dc9090fc1e15",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM5MDg0NiwiZXhwIjoxNzU0NDI2ODQ2fQ.AlLEhQFOpoDuuoKj4bWsE6FDcWXLcD51WnQn4mYEaRE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Local_URL}}/admin/position",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "admin",
+            "position"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้างรายชื่อตำแหน่งใยบริษัท",
+      "id": "035f95ec-cbf5-4ccb-8c75-0ec5d124a387",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY4ZGJhOTQ0LTkzMmMtNDBhZC04ZGNjLTM4MzY4ZmFmZTYwYiIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM5MzA2MSwiZXhwIjoxNzU0NDI5MDYxfQ.EbHRUQb3UF8_EqdDFA1V8Hop4_MkGWrsb-lQbBglBFc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companyId\": \"GkW1\",\n  \"name\": \"Software Engineer\",\n  \"note\": \"Responsible for software development and maintenance\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Local_URL}}/admin/position",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "admin",
+            "position"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้างรายชื่อตำแหน่งใยบริษัท แบบ bulk",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "fff085f2-721f-47d7-af5d-96b65f56e948",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "2faa80d7-ee66-4920-9a94-48b896db27f6",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEyOGNmMTVkLWY1ZTktNDY0Ny1iMDNlLWJmZThjMzUyYzY1NiIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDQ3NDYzMSwiZXhwIjoxNzU0NTEwNjMxfQ.jOsSum2Ls-KCphpwoSXdAipBA0AM9yFin1XuJqAtH7A",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"positions\": [\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Software Engineer\",\n      \"note\": \"Responsible for software development and maintenance\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Frontend Developer\",\n      \"note\": \"Builds user interfaces using modern JavaScript frameworks\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Backend Developer\",\n      \"note\": \"Develops and maintains server-side application logic\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"DevOps Engineer\",\n      \"note\": \"Manages CI/CD pipelines and cloud infrastructure\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"QA Engineer\",\n      \"note\": \"Ensures software quality through testing and automation\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Product Manager\",\n      \"note\": \"Defines product roadmap and collaborates with cross-functional teams\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"UI/UX Designer\",\n      \"note\": \"Designs intuitive and attractive user experiences\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Data Analyst\",\n      \"note\": \"Analyzes data to support decision making and insights\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Security Engineer\",\n      \"note\": \"Implements security measures and monitors for vulnerabilities\"\n    },\n    {\n      \"companyId\": \"_o5j\",\n      \"name\": \"Technical Support Specialist\",\n      \"note\": \"Provides technical assistance and troubleshooting for clients\"\n    }\n  ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_Oat_URL}}/admin/position/bulk/create",
+          "host": [
+            "{{Base_Oat_URL}}"
+          ],
+          "path": [
+            "admin",
+            "position",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

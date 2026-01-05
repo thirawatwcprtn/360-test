@@ -1,0 +1,341 @@
+{
+  "info": {
+    "_postman_id": "48d01449-25f7-465d-aecb-17408c941257",
+    "name": "Admin Employee Survey API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "สร้างsurvey_reviewers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1776e58f-5f7f-4a47-bc28-ce9f2f45e36c",
+            "exec": [
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "a060e4fb-1a5d-44ba-9728-8be442507bd5",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee/reviewers",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee",
+            "reviewers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้างreviewers_bulk",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8d3c42ac-20d2-45cd-84e7-3da900e542b6",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "edb85aa7-0a3d-4247-9875-977740488a96",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reviewers\": [\n    {\n      \"employeeId\": \"emp12345678\",\n      \"reviewerId\": \"emp87654321\",\n      \"surveyId\": 1,\n      \"reviewType\": \"PEER\"\n    },\n    {\n      \"employeeId\": \"emp12345678\",\n      \"reviewerId\": \"emp11111111\",\n      \"surveyId\": 2,\n      \"reviewType\": \"MANAGER\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee-reviews/reviewers/bulk/create",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "reviewers",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบลบ employee_review",
+      "id": "48e1ae91-d0e2-4a00-9e56-44cc1802c205",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee/reviewers/{{id_employeereviews}}",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee",
+            "reviewers",
+            "{{id_employeereviews}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบค้นหา_employId",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "548783b9-5ae5-44ce-840f-ab7970ec7bb2",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "2082109d-6f9d-497a-b563-31a460685aae",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee-reviews/{{employeeId}}/reviews/to-receive",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "{{employeeId}}",
+            "reviews",
+            "to-receive"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบนำreviewerไปผูกกับemployeeid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "549b3a47-e3f1-4b8e-852f-6c64d904095b",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "59b99aa6-d233-4820-9cba-98a3827f092b",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reviewers\": [\n    // {\n    //   \"employeeId\": \"iVuDSW6u\",\n    //   \"reviewerId\": \"-W1oTMQH\",\n    //   \"surveyId\": 31,\n    //   \"reviewType\": \"PEER\"\n    // },\n    {\n      \"employeeId\": \"DFbOel4y\",\n      \"reviewerId\": \"-W1oTMQH\",\n      \"surveyId\": 31,\n      \"reviewType\": \"PEER\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee-reviews/reviewers/bulk/create",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "reviewers",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Bulk/addsign",
+      "id": "5393d7a8-9363-4224-8836-84b3cf8d342a",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"surveyId\": 1,\n  \"assignments\": {\n    \"emp12345678\": [\n      \"emp87654321\",\n      \"emp11111111\",\n      \"emp22222222\"\n    ],\n    \"emp87654321\": [\n      \"emp12345678\",\n      \"emp33333333\"\n    ]\n  },\n  \"defaultReviewType\": \"PEER\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/employee-reviews/reviewers/bulk/assign",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "reviewers",
+            "bulk",
+            "assign"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "6a63ad7f-ee18-4489-b004-f80b62e1948b",
+      "key": "id_employeereviews",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "id": "80e3895c-e3ad-4199-8797-2462aa0160ed",
+      "key": "employeeId",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

@@ -1,0 +1,693 @@
+{
+  "info": {
+    "_postman_id": "e0802d4a-eac7-4e73-9f2a-1329cce85df8",
+    "name": "ทดสอบสร้าง Company และ Employees",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ค้นหาชื่อบริษัท(all)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "b9a4d4f9-c826-4987-8ef4-2c66ac8a1d41",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Base_URL}}/admin/company",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหาชื่อบริษัท(id)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "d7a4e86a-b240-42f2-8ca8-eac8152367b0",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Base_URL}}/admin/company/{{company_id}}",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "{{company_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login and get token Copy 3",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "pm.environment.set(\"token\", pm.response.json().data.token)",
+              "",
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"TC2: Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"TC3: Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"TC4: Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"TC5: Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC6: Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC7 :Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              "pm.test(\"TC8: Response has non-empty token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"data\");",
+              "    pm.expect(jsonData.data).to.have.property(\"token\");",
+              "    ",
+              "    const token = jsonData.data.token;",
+              "    pm.expect(token).to.be.a(\"string\").and.not.empty;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8bf01559-97b3-4fb7-9feb-04f99b41e332",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "d41090ba-b04a-4fbe-a02f-2fdfe6f5d523",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\n//   \"username\": \"admin-rl\",\n//   \"password\": \"1234\"\n// }\n\n// Env_Mink\n// {\n//   \"username\": \"admin\",\n//   \"password\": \"admin12345678\"\n// }\n{\n  \"username\": \"admin\",\n  \"password\": \"test1234\"\n\n//   \"username\": \"{{username}}\",\n//   \"password\": \"{{password}}\"\n\n}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/auth/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างbulk company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "95ba7a1b-85dc-493c-b481-c57e5a28ff82",
+            "exec": [
+              "pm.environment.get(\"survey_id\")",
+              "pm.environment.get(\"company_id\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "8e67e82a-6b65-4374-8bb5-fe76119e68fe",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companies\": [\n    {\n      \"code\": \"TECHNO_SOLUTIONS\",\n      \"slug\": \"techno-solutions\",\n      \"name\": \"เทคโน โซลูชั่นส์ จำกัด\",\n      \"description\": \"บริษัทพัฒนาซอฟต์แวร์และระบบสารสนเทศชั้นนำ\",\n      \"note\": \"ลูกค้าสำคัญในกลุ่มธนาคาร\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"info@technosolutions.co.th\",\n      \"website\": \"https://technosolutions.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Software Development\",\n        \"employees\": 250\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_LOGISTICS\",\n      \"slug\": \"smart-logistics\",\n      \"name\": \"สมาร์ท โลจิสติกส์ (ประเทศไทย) จำกัด\",\n      \"description\": \"ผู้ให้บริการขนส่งและคลังสินค้าครบวงจร\",\n      \"note\": \"มีคลังสินค้าใน 5 จังหวัด\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"contact@smartlogistics.co.th\",\n      \"website\": \"https://smartlogistics.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Logistics\",\n        \"employees\": 800\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"GREEN_ENERGY\",\n      \"slug\": \"green-energy\",\n      \"name\": \"กรีน เอนเนอร์จี้ คอร์ปอเรชั่น จำกัด (มหาชน)\",\n      \"description\": \"ผู้ผลิตและจำหน่ายพลังงานทดแทน\",\n      \"note\": \"โครงการโซลาร์ฟาร์ม 15 แห่ง\",\n      \"phone\": \"+66-2-456-7890\",\n      \"email\": \"ir@greenenergy.co.th\",\n      \"website\": \"https://greenenergy.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Renewable Energy\",\n        \"employees\": 450\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"DIGITAL_MARKETING\",\n      \"slug\": \"digital-marketing\",\n      \"name\": \"ดิจิทัล มาร์เก็ตติ้ง เอเจนซี่ จำกัด\",\n      \"description\": \"บริการการตลาดออนไลน์และโซเชียลมีเดีย\",\n      \"note\": \"ลูกค้า 200+ แบรนด์ชั้นนำ\",\n      \"phone\": \"+66-2-567-8901\",\n      \"email\": \"hello@digitalmarketing.co.th\",\n      \"website\": \"https://digitalmarketing.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Digital Marketing\",\n        \"employees\": 120\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FOOD_INNOVATION\",\n      \"slug\": \"food-innovation\",\n      \"name\": \"ฟู้ด อินโนเวชั่น แล็บ จำกัด\",\n      \"description\": \"พัฒนาผลิตภัณฑ์อาหารและเครื่องดื่มนวัตกรรม\",\n      \"note\": \"R&D Center ขนาดใหญ่\",\n      \"phone\": \"+66-2-678-9012\",\n      \"email\": \"info@foodinnovation.co.th\",\n      \"website\": \"https://foodinnovation.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Food & Beverage\",\n        \"employees\": 180\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"HEALTH_PLUS\",\n      \"slug\": \"health-plus\",\n      \"name\": \"เฮลท์ พลัส เมดิคอล เซ็นเตอร์ จำกัด\",\n      \"description\": \"ผู้ให้บริการด้านสุขภาพและการแพทย์ครบวงจร\",\n      \"note\": \"สาขา 12 แห่งทั่วประเทศ\",\n      \"phone\": \"+66-2-789-0123\",\n      \"email\": \"service@healthplus.co.th\",\n      \"website\": \"https://healthplus.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Healthcare\",\n        \"employees\": 950\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FUTURE_FASHION\",\n      \"slug\": \"future-fashion\",\n      \"name\": \"ฟิวเจอร์ แฟชั่น กรุ๊ป จำกัด\",\n      \"description\": \"ผู้ผลิตและจำหน่ายเสื้อผ้าแฟชั่น\",\n      \"note\": \"แบรนด์ภายใต้บริษัท 8 แบรนด์\",\n      \"phone\": \"+66-2-890-1234\",\n      \"email\": \"contact@futurefashion.co.th\",\n      \"website\": \"https://futurefashion.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Fashion & Retail\",\n        \"employees\": 600\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_HOME\",\n      \"slug\": \"smart-home\",\n      \"name\": \"สมาร์ท โฮม เทคโนโลยี จำกัด\",\n      \"description\": \"ระบบบ้านอัจฉริยะและ IoT Solutions\",\n      \"note\": \"พาร์ทเนอร์กับผู้พัฒนาอสังหาฯ ชั้นนำ\",\n      \"phone\": \"+66-2-901-2345\",\n      \"email\": \"support@smarthome.co.th\",\n      \"website\": \"https://smarthome.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Smart Technology\",\n        \"employees\": 85\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"ECO_PACKAGING\",\n      \"slug\": \"eco-packaging\",\n      \"name\": \"อีโค แพ็คเกจจิ้ง อินดัสทรี่ จำกัด\",\n      \"description\": \"ผลิตบรรจุภัณฑ์เป็นมิตรกับสิ่งแวดล้อม\",\n      \"note\": \"ได้รับการรับรอง ISO 14001\",\n      \"phone\": \"+66-2-012-3456\",\n      \"email\": \"sales@ecopackaging.co.th\",\n      \"website\": \"https://ecopackaging.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Packaging\",\n        \"employees\": 320\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"EDUCATION_TECH\",\n      \"slug\": \"education-tech\",\n      \"name\": \"เอดูเคชั่น เทค อินโนเวชั่น จำกัด\",\n      \"description\": \"แพลตฟอร์มการเรียนรู้ออนไลน์และ EdTech\",\n      \"note\": \"ผู้ใช้งานกว่า 500,000 คน\",\n      \"phone\": \"+66-2-123-4567\",\n      \"email\": \"info@edtech.co.th\",\n      \"website\": \"https://edtech.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Education Technology\",\n        \"employees\": 150\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"THAI_CRAFT\",\n      \"slug\": \"thai-craft\",\n      \"name\": \"ไทย คราฟต์ เอ็กซ์ปอร์ต จำกัด\",\n      \"description\": \"ส่งออกผลิตภัณฑ์หัตถกรรมไทยสู่ตลาดโลก\",\n      \"note\": \"ส่งออกไป 25 ประเทศ\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"export@thaicraft.co.th\",\n      \"website\": \"https://thaicraft.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Handicraft Export\",\n        \"employees\": 200\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FINTECH_SOLUTION\",\n      \"slug\": \"fintech-solution\",\n      \"name\": \"ฟินเทค โซลูชั่น เซอร์วิส จำกัด\",\n      \"description\": \"ระบบการเงินดิจิทัลและ Payment Gateway\",\n      \"note\": \"ได้รับใบอนุญาตจาก ธปท.\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"support@fintechsolution.co.th\",\n      \"website\": \"https://fintechsolution.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Financial Technology\",\n        \"employees\": 95\n      },\n      \"status\": \"ACTIVE\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company/bulk/create",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้าง one company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "66ac6795-94d1-4957-97ad-481d7045a57d",
+            "exec": [
+              "pm.environment.get(\"survey_id\")",
+              "pm.environment.get(\"company_id\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "7e69cb99-9060-476f-82cf-b0693a339dd6",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"RL001\",\n  \"slug\": \"rl-corp\",\n  \"name\": \"Relearn-Solution\",\n  \"description\": \"Relearn-Solution\",\n  \"note\": \"Internal note about company\",\n  \"phone\": \"+66-2-123-4567\",\n  \"email\": \"contact@relearnsolution.co.th\",\n  \"website\": \"https://acme.co.th\",\n  \"metadata\": {\n    \"industry\": \"Technology\",\n    \"employees\": 50\n  },\n  \"status\": \"ACTIVE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหาชื่อบริษัท(id) Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "1104cef8-8841-4a5a-9150-63bdda8bf6ec",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Base_URL}}/admin/company/{{company_id}}",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "{{company_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างbulk employees",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "3cb3df8b-1ca9-4b58-a3e5-472e109475cc",
+            "exec": [
+              "pm.environment.get(\"survey_id\")",
+              "pm.environment.get(\"company_id\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "0af968a3-dc57-458e-9b47-7d62533392d7",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "c6052825-bfea-4b5f-8652-16a8d51c6821",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employees\": [\n    {\n      \"companyId\": \"{{company_id}}\",\n      \"email\": \"thirawat.w@company.co.th\",\n      \"firstname\": \"Thirawat\",\n      \"lastname\": \"W\",\n      \"middlename\": \"\",\n      \"phone\": \"+66-8-123-4567\",\n      \"departmentId\": \"dept123\",\n      \"positionId\": \"pos123\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"QA\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2024-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    },\n    {\n      \"companyId\": \"{{company_id}}\",\n      \"email\": \"thitiwut.e@company.co.th\",\n      \"firstname\": \"Thitiwut\",\n      \"lastname\": \"E\",\n      \"middlename\": \"\",\n      \"phone\": \"+66-8-234-5678\",\n      \"departmentId\": \"dept123\",\n      \"positionId\": \"pos124\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Dev\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2024-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    },\n    {\n      \"companyId\": \"{{company_id}}\",\n      \"email\": \"supakorn.p@company.co.th\",\n      \"firstname\": \"Supakorn\",\n      \"lastname\": \"P\",\n      \"middlename\": \"\",\n      \"phone\": \"+66-8-345-6789\",\n      \"departmentId\": \"dept123\",\n      \"positionId\": \"pos125\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Dev\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2024-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee/bulk/create",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้าง bulk employee",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "6d47b44c-76f4-4091-a527-b81e53985604",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"RL001\",\n  \"slug\": \"rl-corp\",\n  \"name\": \"Relearn-Solution\",\n  \"description\": \"Relearn-Solution\",\n  \"note\": \"Internal note about company\",\n  \"phone\": \"+66-2-123-4567\",\n  \"email\": \"contact@relearnsolution.co.th\",\n  \"website\": \"https://acme.co.th\",\n  \"metadata\": {\n    \"industry\": \"Technology\",\n    \"employees\": 50\n  },\n  \"status\": \"ACTIVE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างbulk company Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "8da2f1a5-f326-47ac-8bad-53935994741c",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "49ed927f-5bf1-404e-b500-e25509e7d4fa",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companies\": [\n    {\n      \"code\": \"TECHNO_SOLUTIONS\",\n      \"slug\": \"techno-solutions\",\n      \"name\": \"เทคโน โซลูชั่นส์ จำกัด\",\n      \"description\": \"บริษัทพัฒนาซอฟต์แวร์และระบบสารสนเทศชั้นนำ\",\n      \"note\": \"ลูกค้าสำคัญในกลุ่มธนาคาร\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"info@technosolutions.co.th\",\n      \"website\": \"https://technosolutions.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Software Development\",\n        \"employees\": 250\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_LOGISTICS\",\n      \"slug\": \"smart-logistics\",\n      \"name\": \"สมาร์ท โลจิสติกส์ (ประเทศไทย) จำกัด\",\n      \"description\": \"ผู้ให้บริการขนส่งและคลังสินค้าครบวงจร\",\n      \"note\": \"มีคลังสินค้าใน 5 จังหวัด\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"contact@smartlogistics.co.th\",\n      \"website\": \"https://smartlogistics.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Logistics\",\n        \"employees\": 800\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"GREEN_ENERGY\",\n      \"slug\": \"green-energy\",\n      \"name\": \"กรีน เอนเนอร์จี้ คอร์ปอเรชั่น จำกัด (มหาชน)\",\n      \"description\": \"ผู้ผลิตและจำหน่ายพลังงานทดแทน\",\n      \"note\": \"โครงการโซลาร์ฟาร์ม 15 แห่ง\",\n      \"phone\": \"+66-2-456-7890\",\n      \"email\": \"ir@greenenergy.co.th\",\n      \"website\": \"https://greenenergy.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Renewable Energy\",\n        \"employees\": 450\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"DIGITAL_MARKETING\",\n      \"slug\": \"digital-marketing\",\n      \"name\": \"ดิจิทัล มาร์เก็ตติ้ง เอเจนซี่ จำกัด\",\n      \"description\": \"บริการการตลาดออนไลน์และโซเชียลมีเดีย\",\n      \"note\": \"ลูกค้า 200+ แบรนด์ชั้นนำ\",\n      \"phone\": \"+66-2-567-8901\",\n      \"email\": \"hello@digitalmarketing.co.th\",\n      \"website\": \"https://digitalmarketing.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Digital Marketing\",\n        \"employees\": 120\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FOOD_INNOVATION\",\n      \"slug\": \"food-innovation\",\n      \"name\": \"ฟู้ด อินโนเวชั่น แล็บ จำกัด\",\n      \"description\": \"พัฒนาผลิตภัณฑ์อาหารและเครื่องดื่มนวัตกรรม\",\n      \"note\": \"R&D Center ขนาดใหญ่\",\n      \"phone\": \"+66-2-678-9012\",\n      \"email\": \"info@foodinnovation.co.th\",\n      \"website\": \"https://foodinnovation.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Food & Beverage\",\n        \"employees\": 180\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"HEALTH_PLUS\",\n      \"slug\": \"health-plus\",\n      \"name\": \"เฮลท์ พลัส เมดิคอล เซ็นเตอร์ จำกัด\",\n      \"description\": \"ผู้ให้บริการด้านสุขภาพและการแพทย์ครบวงจร\",\n      \"note\": \"สาขา 12 แห่งทั่วประเทศ\",\n      \"phone\": \"+66-2-789-0123\",\n      \"email\": \"service@healthplus.co.th\",\n      \"website\": \"https://healthplus.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Healthcare\",\n        \"employees\": 950\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FUTURE_FASHION\",\n      \"slug\": \"future-fashion\",\n      \"name\": \"ฟิวเจอร์ แฟชั่น กรุ๊ป จำกัด\",\n      \"description\": \"ผู้ผลิตและจำหน่ายเสื้อผ้าแฟชั่น\",\n      \"note\": \"แบรนด์ภายใต้บริษัท 8 แบรนด์\",\n      \"phone\": \"+66-2-890-1234\",\n      \"email\": \"contact@futurefashion.co.th\",\n      \"website\": \"https://futurefashion.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Fashion & Retail\",\n        \"employees\": 600\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_HOME\",\n      \"slug\": \"smart-home\",\n      \"name\": \"สมาร์ท โฮม เทคโนโลยี จำกัด\",\n      \"description\": \"ระบบบ้านอัจฉริยะและ IoT Solutions\",\n      \"note\": \"พาร์ทเนอร์กับผู้พัฒนาอสังหาฯ ชั้นนำ\",\n      \"phone\": \"+66-2-901-2345\",\n      \"email\": \"support@smarthome.co.th\",\n      \"website\": \"https://smarthome.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Smart Technology\",\n        \"employees\": 85\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"ECO_PACKAGING\",\n      \"slug\": \"eco-packaging\",\n      \"name\": \"อีโค แพ็คเกจจิ้ง อินดัสทรี่ จำกัด\",\n      \"description\": \"ผลิตบรรจุภัณฑ์เป็นมิตรกับสิ่งแวดล้อม\",\n      \"note\": \"ได้รับการรับรอง ISO 14001\",\n      \"phone\": \"+66-2-012-3456\",\n      \"email\": \"sales@ecopackaging.co.th\",\n      \"website\": \"https://ecopackaging.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Packaging\",\n        \"employees\": 320\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"EDUCATION_TECH\",\n      \"slug\": \"education-tech\",\n      \"name\": \"เอดูเคชั่น เทค อินโนเวชั่น จำกัด\",\n      \"description\": \"แพลตฟอร์มการเรียนรู้ออนไลน์และ EdTech\",\n      \"note\": \"ผู้ใช้งานกว่า 500,000 คน\",\n      \"phone\": \"+66-2-123-4567\",\n      \"email\": \"info@edtech.co.th\",\n      \"website\": \"https://edtech.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Education Technology\",\n        \"employees\": 150\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"THAI_CRAFT\",\n      \"slug\": \"thai-craft\",\n      \"name\": \"ไทย คราฟต์ เอ็กซ์ปอร์ต จำกัด\",\n      \"description\": \"ส่งออกผลิตภัณฑ์หัตถกรรมไทยสู่ตลาดโลก\",\n      \"note\": \"ส่งออกไป 25 ประเทศ\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"export@thaicraft.co.th\",\n      \"website\": \"https://thaicraft.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Handicraft Export\",\n        \"employees\": 200\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FINTECH_SOLUTION\",\n      \"slug\": \"fintech-solution\",\n      \"name\": \"ฟินเทค โซลูชั่น เซอร์วิส จำกัด\",\n      \"description\": \"ระบบการเงินดิจิทัลและ Payment Gateway\",\n      \"note\": \"ได้รับใบอนุญาตจาก ธปท.\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"support@fintechsolution.co.th\",\n      \"website\": \"https://fintechsolution.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Financial Technology\",\n        \"employees\": 95\n      },\n      \"status\": \"ACTIVE\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company/create",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "17994891-5a84-4caa-a9d2-7610c992d769",
+      "key": "company_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

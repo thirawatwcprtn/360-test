@@ -1,0 +1,64 @@
+{
+  "info": {
+    "_postman_id": "ac42df69-de46-494a-9586-343e83307c31",
+    "name": "Company",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Delete company Change status active to suspend",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "ae054aa6-08ea-4630-963e-469ff5a14489",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "// status company is Suspended ",
+              "pm.test(\"Suspended\", function () {",
+              "    const res = pm.response.json();",
+              "    pm.expect(res.message).to.eql(\"Company suspended successfully\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "9a0aa31e-5994-4f5f-9a6e-a92196201db6",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{bearer_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/company/{{company_id}}",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "{{company_id}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

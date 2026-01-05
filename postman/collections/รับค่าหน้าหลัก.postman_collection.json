@@ -1,0 +1,367 @@
+{
+  "info": {
+    "_postman_id": "6244aaac-1c7d-4c5d-a8e4-a52a045b5b05",
+    "name": "รับค่าหน้าหลัก",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ค้นหาข้อมูลที่เป็นActive",
+      "id": "2e609afd-6683-42c1-a368-f7e4b402243e",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Local_URL}}/api/backend/admin/campaign?search=&page=1&limit=20&sortAsc=true&status=ACTIVE",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "api",
+            "backend",
+            "admin",
+            "campaign"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": ""
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "sortAsc",
+              "value": "true"
+            },
+            {
+              "key": "status",
+              "value": "ACTIVE"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "หน้าusers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "96ed53e6-1201-4106-9f06-f6bcd7e6e243",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "pm.test(\"ค้นหาคำว่า Campaign\", function () {",
+              "    pm.expect(pm.response.text()).to.include('Campaign');",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "3a1ed99b-b895-4f07-88b7-7ccc70c414bf",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "qa_sky201",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "admin-test",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Local_URL}}/users",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้าง company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2aaecfe8-0eca-4206-9e4e-ef7af6e1c1d3",
+            "exec": [
+              "pm.test(\"Status code is 201 and Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "eb01a6e1-e9af-4824-9f2f-a04d40d1f24c",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM3ODM2OSwiZXhwIjoxNzU0NDE0MzY5fQ.oEmlZOGApKlPiPQfWeC1hyTvrp4_gASaUjcWrtqeaPE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companies\": [\n    {\n      \"code\": \"TECHNO_SOLUTIONS\",\n      \"slug\": \"techno-solutions\",\n      \"name\": \"เทคโน โซลูชั่นส์ จำกัด\",\n      \"description\": \"บริษัทพัฒนาซอฟต์แวร์และระบบสารสนเทศชั้นนำ\",\n      \"note\": \"ลูกค้าสำคัญในกลุ่มธนาคาร\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"info@technosolutions.co.th\",\n      \"website\": \"https://technosolutions.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Software Development\",\n        \"employees\": 250\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_LOGISTICS\",\n      \"slug\": \"smart-logistics\",\n      \"name\": \"สมาร์ท โลจิสติกส์ (ประเทศไทย) จำกัด\",\n      \"description\": \"ผู้ให้บริการขนส่งและคลังสินค้าครบวงจร\",\n      \"note\": \"มีคลังสินค้าใน 5 จังหวัด\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"contact@smartlogistics.co.th\",\n      \"website\": \"https://smartlogistics.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Logistics\",\n        \"employees\": 800\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"GREEN_ENERGY\",\n      \"slug\": \"green-energy\",\n      \"name\": \"กรีน เอนเนอร์จี้ คอร์ปอเรชั่น จำกัด (มหาชน)\",\n      \"description\": \"ผู้ผลิตและจำหน่ายพลังงานทดแทน\",\n      \"note\": \"โครงการโซลาร์ฟาร์ม 15 แห่ง\",\n      \"phone\": \"+66-2-456-7890\",\n      \"email\": \"ir@greenenergy.co.th\",\n      \"website\": \"https://greenenergy.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Renewable Energy\",\n        \"employees\": 450\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"DIGITAL_MARKETING\",\n      \"slug\": \"digital-marketing\",\n      \"name\": \"ดิจิทัล มาร์เก็ตติ้ง เอเจนซี่ จำกัด\",\n      \"description\": \"บริการการตลาดออนไลน์และโซเชียลมีเดีย\",\n      \"note\": \"ลูกค้า 200+ แบรนด์ชั้นนำ\",\n      \"phone\": \"+66-2-567-8901\",\n      \"email\": \"hello@digitalmarketing.co.th\",\n      \"website\": \"https://digitalmarketing.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Digital Marketing\",\n        \"employees\": 120\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FOOD_INNOVATION\",\n      \"slug\": \"food-innovation\",\n      \"name\": \"ฟู้ด อินโนเวชั่น แล็บ จำกัด\",\n      \"description\": \"พัฒนาผลิตภัณฑ์อาหารและเครื่องดื่มนวัตกรรม\",\n      \"note\": \"R&D Center ขนาดใหญ่\",\n      \"phone\": \"+66-2-678-9012\",\n      \"email\": \"info@foodinnovation.co.th\",\n      \"website\": \"https://foodinnovation.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Food & Beverage\",\n        \"employees\": 180\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"HEALTH_PLUS\",\n      \"slug\": \"health-plus\",\n      \"name\": \"เฮลท์ พลัส เมดิคอล เซ็นเตอร์ จำกัด\",\n      \"description\": \"ผู้ให้บริการด้านสุขภาพและการแพทย์ครบวงจร\",\n      \"note\": \"สาขา 12 แห่งทั่วประเทศ\",\n      \"phone\": \"+66-2-789-0123\",\n      \"email\": \"service@healthplus.co.th\",\n      \"website\": \"https://healthplus.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Healthcare\",\n        \"employees\": 950\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FUTURE_FASHION\",\n      \"slug\": \"future-fashion\",\n      \"name\": \"ฟิวเจอร์ แฟชั่น กรุ๊ป จำกัด\",\n      \"description\": \"ผู้ผลิตและจำหน่ายเสื้อผ้าแฟชั่น\",\n      \"note\": \"แบรนด์ภายใต้บริษัท 8 แบรนด์\",\n      \"phone\": \"+66-2-890-1234\",\n      \"email\": \"contact@futurefashion.co.th\",\n      \"website\": \"https://futurefashion.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Fashion & Retail\",\n        \"employees\": 600\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_HOME\",\n      \"slug\": \"smart-home\",\n      \"name\": \"สมาร์ท โฮม เทคโนโลยี จำกัด\",\n      \"description\": \"ระบบบ้านอัจฉริยะและ IoT Solutions\",\n      \"note\": \"พาร์ทเนอร์กับผู้พัฒนาอสังหาฯ ชั้นนำ\",\n      \"phone\": \"+66-2-901-2345\",\n      \"email\": \"support@smarthome.co.th\",\n      \"website\": \"https://smarthome.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Smart Technology\",\n        \"employees\": 85\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"ECO_PACKAGING\",\n      \"slug\": \"eco-packaging\",\n      \"name\": \"อีโค แพ็คเกจจิ้ง อินดัสทรี่ จำกัด\",\n      \"description\": \"ผลิตบรรจุภัณฑ์เป็นมิตรกับสิ่งแวดล้อม\",\n      \"note\": \"ได้รับการรับรอง ISO 14001\",\n      \"phone\": \"+66-2-012-3456\",\n      \"email\": \"sales@ecopackaging.co.th\",\n      \"website\": \"https://ecopackaging.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Packaging\",\n        \"employees\": 320\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"EDUCATION_TECH\",\n      \"slug\": \"education-tech\",\n      \"name\": \"เอดูเคชั่น เทค อินโนเวชั่น จำกัด\",\n      \"description\": \"แพลตฟอร์มการเรียนรู้ออนไลน์และ EdTech\",\n      \"note\": \"ผู้ใช้งานกว่า 500,000 คน\",\n      \"phone\": \"+66-2-123-4567\",\n      \"email\": \"info@edtech.co.th\",\n      \"website\": \"https://edtech.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Education Technology\",\n        \"employees\": 150\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"THAI_CRAFT\",\n      \"slug\": \"thai-craft\",\n      \"name\": \"ไทย คราฟต์ เอ็กซ์ปอร์ต จำกัด\",\n      \"description\": \"ส่งออกผลิตภัณฑ์หัตถกรรมไทยสู่ตลาดโลก\",\n      \"note\": \"ส่งออกไป 25 ประเทศ\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"export@thaicraft.co.th\",\n      \"website\": \"https://thaicraft.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Handicraft Export\",\n        \"employees\": 200\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FINTECH_SOLUTION\",\n      \"slug\": \"fintech-solution\",\n      \"name\": \"ฟินเทค โซลูชั่น เซอร์วิส จำกัด\",\n      \"description\": \"ระบบการเงินดิจิทัลและ Payment Gateway\",\n      \"note\": \"ได้รับใบอนุญาตจาก ธปท.\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"support@fintechsolution.co.th\",\n      \"website\": \"https://fintechsolution.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Financial Technology\",\n        \"employees\": 95\n      },\n      \"status\": \"ACTIVE\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "192.168.1.134:3000/admin/company/bulk/create",
+          "host": [
+            "192",
+            "168",
+            "1",
+            "134"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "company",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้าง company_localhost",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2aaecfe8-0eca-4206-9e4e-ef7af6e1c1d3",
+            "exec": [
+              "pm.test(\"Status code is 201 and Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "9833cb72-58cc-4276-ac3f-21900c1b9374",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM3ODM2OSwiZXhwIjoxNzU0NDE0MzY5fQ.oEmlZOGApKlPiPQfWeC1hyTvrp4_gASaUjcWrtqeaPE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companies\": [\n    {\n      \"code\": \"TECHNO_SOLUTIONS\",\n      \"slug\": \"techno-solutions\",\n      \"name\": \"เทคโน โซลูชั่นส์ จำกัด\",\n      \"description\": \"บริษัทพัฒนาซอฟต์แวร์และระบบสารสนเทศชั้นนำ\",\n      \"note\": \"ลูกค้าสำคัญในกลุ่มธนาคาร\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"info@technosolutions.co.th\",\n      \"website\": \"https://technosolutions.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Software Development\",\n        \"employees\": 250\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_LOGISTICS\",\n      \"slug\": \"smart-logistics\",\n      \"name\": \"สมาร์ท โลจิสติกส์ (ประเทศไทย) จำกัด\",\n      \"description\": \"ผู้ให้บริการขนส่งและคลังสินค้าครบวงจร\",\n      \"note\": \"มีคลังสินค้าใน 5 จังหวัด\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"contact@smartlogistics.co.th\",\n      \"website\": \"https://smartlogistics.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Logistics\",\n        \"employees\": 800\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"GREEN_ENERGY\",\n      \"slug\": \"green-energy\",\n      \"name\": \"กรีน เอนเนอร์จี้ คอร์ปอเรชั่น จำกัด (มหาชน)\",\n      \"description\": \"ผู้ผลิตและจำหน่ายพลังงานทดแทน\",\n      \"note\": \"โครงการโซลาร์ฟาร์ม 15 แห่ง\",\n      \"phone\": \"+66-2-456-7890\",\n      \"email\": \"ir@greenenergy.co.th\",\n      \"website\": \"https://greenenergy.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Renewable Energy\",\n        \"employees\": 450\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"DIGITAL_MARKETING\",\n      \"slug\": \"digital-marketing\",\n      \"name\": \"ดิจิทัล มาร์เก็ตติ้ง เอเจนซี่ จำกัด\",\n      \"description\": \"บริการการตลาดออนไลน์และโซเชียลมีเดีย\",\n      \"note\": \"ลูกค้า 200+ แบรนด์ชั้นนำ\",\n      \"phone\": \"+66-2-567-8901\",\n      \"email\": \"hello@digitalmarketing.co.th\",\n      \"website\": \"https://digitalmarketing.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Digital Marketing\",\n        \"employees\": 120\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FOOD_INNOVATION\",\n      \"slug\": \"food-innovation\",\n      \"name\": \"ฟู้ด อินโนเวชั่น แล็บ จำกัด\",\n      \"description\": \"พัฒนาผลิตภัณฑ์อาหารและเครื่องดื่มนวัตกรรม\",\n      \"note\": \"R&D Center ขนาดใหญ่\",\n      \"phone\": \"+66-2-678-9012\",\n      \"email\": \"info@foodinnovation.co.th\",\n      \"website\": \"https://foodinnovation.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Food & Beverage\",\n        \"employees\": 180\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"HEALTH_PLUS\",\n      \"slug\": \"health-plus\",\n      \"name\": \"เฮลท์ พลัส เมดิคอล เซ็นเตอร์ จำกัด\",\n      \"description\": \"ผู้ให้บริการด้านสุขภาพและการแพทย์ครบวงจร\",\n      \"note\": \"สาขา 12 แห่งทั่วประเทศ\",\n      \"phone\": \"+66-2-789-0123\",\n      \"email\": \"service@healthplus.co.th\",\n      \"website\": \"https://healthplus.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Healthcare\",\n        \"employees\": 950\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FUTURE_FASHION\",\n      \"slug\": \"future-fashion\",\n      \"name\": \"ฟิวเจอร์ แฟชั่น กรุ๊ป จำกัด\",\n      \"description\": \"ผู้ผลิตและจำหน่ายเสื้อผ้าแฟชั่น\",\n      \"note\": \"แบรนด์ภายใต้บริษัท 8 แบรนด์\",\n      \"phone\": \"+66-2-890-1234\",\n      \"email\": \"contact@futurefashion.co.th\",\n      \"website\": \"https://futurefashion.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Fashion & Retail\",\n        \"employees\": 600\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"SMART_HOME\",\n      \"slug\": \"smart-home\",\n      \"name\": \"สมาร์ท โฮม เทคโนโลยี จำกัด\",\n      \"description\": \"ระบบบ้านอัจฉริยะและ IoT Solutions\",\n      \"note\": \"พาร์ทเนอร์กับผู้พัฒนาอสังหาฯ ชั้นนำ\",\n      \"phone\": \"+66-2-901-2345\",\n      \"email\": \"support@smarthome.co.th\",\n      \"website\": \"https://smarthome.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Smart Technology\",\n        \"employees\": 85\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"ECO_PACKAGING\",\n      \"slug\": \"eco-packaging\",\n      \"name\": \"อีโค แพ็คเกจจิ้ง อินดัสทรี่ จำกัด\",\n      \"description\": \"ผลิตบรรจุภัณฑ์เป็นมิตรกับสิ่งแวดล้อม\",\n      \"note\": \"ได้รับการรับรอง ISO 14001\",\n      \"phone\": \"+66-2-012-3456\",\n      \"email\": \"sales@ecopackaging.co.th\",\n      \"website\": \"https://ecopackaging.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Packaging\",\n        \"employees\": 320\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"EDUCATION_TECH\",\n      \"slug\": \"education-tech\",\n      \"name\": \"เอดูเคชั่น เทค อินโนเวชั่น จำกัด\",\n      \"description\": \"แพลตฟอร์มการเรียนรู้ออนไลน์และ EdTech\",\n      \"note\": \"ผู้ใช้งานกว่า 500,000 คน\",\n      \"phone\": \"+66-2-123-4567\",\n      \"email\": \"info@edtech.co.th\",\n      \"website\": \"https://edtech.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Education Technology\",\n        \"employees\": 150\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"THAI_CRAFT\",\n      \"slug\": \"thai-craft\",\n      \"name\": \"ไทย คราฟต์ เอ็กซ์ปอร์ต จำกัด\",\n      \"description\": \"ส่งออกผลิตภัณฑ์หัตถกรรมไทยสู่ตลาดโลก\",\n      \"note\": \"ส่งออกไป 25 ประเทศ\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"export@thaicraft.co.th\",\n      \"website\": \"https://thaicraft.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Handicraft Export\",\n        \"employees\": 200\n      },\n      \"status\": \"ACTIVE\"\n    },\n    {\n      \"code\": \"FINTECH_SOLUTION\",\n      \"slug\": \"fintech-solution\",\n      \"name\": \"ฟินเทค โซลูชั่น เซอร์วิส จำกัด\",\n      \"description\": \"ระบบการเงินดิจิทัลและ Payment Gateway\",\n      \"note\": \"ได้รับใบอนุญาตจาก ธปท.\",\n      \"phone\": \"+66-2-345-6789\",\n      \"email\": \"support@fintechsolution.co.th\",\n      \"website\": \"https://fintechsolution.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Financial Technology\",\n        \"employees\": 95\n      },\n      \"status\": \"ACTIVE\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Local_URL}}/admin/company/bulk/create",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดลองสร้างcompany 1 บริษัท",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2aaecfe8-0eca-4206-9e4e-ef7af6e1c1d3",
+            "exec": [
+              "pm.test(\"Status code is 201 and Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "c386f7b2-4fae-4228-a1ed-881710c5afcf",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM3ODM2OSwiZXhwIjoxNzU0NDE0MzY5fQ.oEmlZOGApKlPiPQfWeC1hyTvrp4_gASaUjcWrtqeaPE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companies\": [\n    {\n      \"code\": \"TECHNO2_SOLUTIONS\",\n      \"slug\": \"techno2-solutions\",\n      \"name\": \"เทคโน โซลูชั่นส์2 จำกัด\",\n      \"description\": \"บริษัทพัฒนาซอฟต์แวร์และระบบสารสนเทศชั้นนำ\",\n      \"note\": \"ลูกค้าสำคัญในกลุ่มธนาคาร\",\n      \"phone\": \"+66-2-234-5678\",\n      \"email\": \"info@technosolutions.co.th\",\n      \"website\": \"https://technosolutions.co.th/\",\n      \"metadata\": {\n        \"industry\": \"Software Development\",\n        \"employees\": 100\n      },\n      \"status\": \"ACTIVE\"\n    },\n   \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Local_URL}}/admin/company/bulk/create",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบลบ companyด้วย code(kiG4)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "c3062374-ec3b-4427-bd0b-b9f9d0d047ad",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "69a050af-d876-49a1-a2c2-b432a6c2a24b",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxZjE0OGViLTE2N2ItNGE5OS05NWE3LTIzZjdmOGI2OWM4MCIsInVzZXJuYW1lIjoiYWRtaW4iLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJwZXJtaXNzaW9ucyI6W10sImlhdCI6MTc1NDM3ODM2OSwiZXhwIjoxNzU0NDE0MzY5fQ.oEmlZOGApKlPiPQfWeC1hyTvrp4_gASaUjcWrtqeaPE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Local_URL}}/admin/company/kiG4",
+          "host": [
+            "{{Local_URL}}"
+          ],
+          "path": [
+            "admin",
+            "company",
+            "kiG4"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

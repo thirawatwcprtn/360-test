@@ -1,0 +1,243 @@
+{
+  "info": {
+    "_postman_id": "7e5ec7fe-d5c5-4d44-8779-55ea20bb74f6",
+    "name": "ทดสอบ Survey",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "สร้าง survey 1คำสั่ง Draft or Active",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "be3da1f4-9012-4ea8-be36-61d386ad77ce",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "9d0377c4-2a91-40c7-b868-33b93bf14d1f",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test Create y with API Draft 4\",\n  \"startDate\": \"2025-08-19T00:00:00Z\",\n  \"endDate\": \"2025-08-30T00:00:00Z\",\n  \"status\": \"DRAFT\",\n  \"internetQuota\": 120,\n  \"textColor\": \"FFFFFF\",\n  \"localizes\": [\n    {\n      \"locale\": \"EN\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"consent\": \"string\",\n      \"sortOrder\": 0,\n      \"status\": \"DRAFT\"\n    }\n  ],\n  \"predefinedQuestions\": [\n    {\n      \"id\": 0,\n      \"type\": \"SINGLE_CHOICE\",\n      \"localizes\": [\n        {\n          \"id\": 0,\n          \"questionId\": 0,\n          \"locale\": \"TH\",\n          \"text\": \"string\",\n          \"helperText\": \"string\",\n          \"sortOrder\": 0,\n          \"status\": \"DRAFT\"\n        }\n      ],\n      \"choices\": [\n        {\n          \"id\": 0,\n          \"code\": \"string\",\n          \"localizes\": [\n            {\n              \"id\": 0,\n              \"locale\": \"TH\",\n              \"text\": \"string\",\n              \"sortOrder\": 0,\n              \"status\": \"DRAFT\"\n            }\n          ],\n          \"condition\": {\n            \"id\": 0,\n            \"label\": \"string\",\n            \"questions\": [\n              {}\n            ],\n            \"_tempId\": 0\n          },\n          \"enableFreeText\": true,\n          \"sortOrder\": 0\n        }\n      ],\n      \"sortOrder\": 0,\n      \"status\": \"DRAFT\",\n      \"isOptional\": true,\n      \"minAnswers\": 0,\n      \"maxAnswers\": 0,\n      \"minRating\": 0,\n      \"maxRating\": 0,\n      \"isConditionEnabled\": true,\n      \"childConditions\": [\n        {\n          \"id\": 0,\n          \"label\": \"string\",\n          \"questions\": [\n            {}\n          ],\n          \"_tempId\": 0\n        }\n      ],\n      \"isPredefined\": true,\n      \"predefinedQuestionId\": 0,\n      \"surveyId\": 0,\n      \"isNested\": true,\n      \"conditionId\": 0\n    }\n  ]\n}\n\n// {\n//   \"name\": \"string\",\n//   \"startDate\": \"2025-08-16T00:00:00Z\",\n//   \"endDate\": \"2025-08-17T00:00:00Z\",\n//   \"status\": \"ACTIVE\",\n//   \"internetQuota\": 120,\n//   \"textColor\": \"string\",\n//   \"localizes\": [\n//     {\n//       \"locale\": \"EN\",\n//       \"title\": \"string\",\n//       \"description\": \"string\",\n//       \"consent\": \"string\",\n//       \"sortOrder\": 0,\n//       \"status\": \"ACTIVE\"\n//     }\n//   ],\n//   \"predefinedQuestions\": [\n//     {\n//       \"id\": 0,\n//       \"type\": \"SINGLE_CHOICE\",\n//       \"localizes\": [\n//         {\n//           \"id\": 0,\n//           \"questionId\": 0,\n//           \"locale\": \"TH\",\n//           \"text\": \"string\",\n//           \"helperText\": \"string\",\n//           \"sortOrder\": 0,\n//           \"status\": \"ACTIVE\"\n//         }\n//       ],\n//       \"choices\": [\n//         {\n//           \"id\": 0,\n//           \"code\": \"string\",\n//           \"localizes\": [\n//             {\n//               \"id\": 0,\n//               \"locale\": \"TH\",\n//               \"text\": \"string\",\n//               \"sortOrder\": 0,\n//               \"status\": \"ACTIVE\"\n//             }\n//           ],\n//           \"condition\": {\n//             \"id\": 0,\n//             \"label\": \"string\",\n//             \"questions\": [\n//               {}\n//             ],\n//             \"_tempId\": 0\n//           },\n//           \"enableFreeText\": true,\n//           \"sortOrder\": 0\n//         }\n//       ],\n//       \"sortOrder\": 0,\n//       \"status\": \"ACTIVE\",\n//       \"isOptional\": true,\n//       \"minAnswers\": 0,\n//       \"maxAnswers\": 0,\n//       \"minRating\": 0,\n//       \"maxRating\": 0,\n//       \"isConditionEnabled\": true,\n//       \"childConditions\": [\n//         {\n//           \"id\": 0,\n//           \"label\": \"string\",\n//           \"questions\": [\n//             {}\n//           ],\n//           \"_tempId\": 0\n//         }\n//       ],\n//       \"isPredefined\": true,\n//       \"predefinedQuestionId\": 0,\n//       \"surveyId\": 0,\n//       \"isNested\": true,\n//       \"conditionId\": 0\n//     }\n//   ]\n// }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/survey",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "survey"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง survey 1คำสั่ง  พร้อม Question",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "be3da1f4-9012-4ea8-be36-61d386ad77ce",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "58caee30-46f0-4bad-b031-25fa425a09cc",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"data\": {\n        \"id\": 52,\n        \"code\": \"2508-35\",\n        \"name\": \"create question UI\",\n        \"startDate\": \"2025-08-18T17:00:00.000Z\",\n        \"endDate\": \"2025-08-29T17:00:00.000Z\",\n        \"status\": \"DRAFT\",\n        \"publishedAt\": null,\n        \"requestEmail\": false,\n        \"requestMobile\": false,\n        \"internetQuota\": 120,\n        \"colorScheme\": null,\n        \"textColor\": \"#000000\",\n        \"logoUrl\": null,\n        \"backgroundUrl\": null,\n        \"createdAt\": \"2025-08-19T10:13:15.331Z\",\n        \"updatedAt\": \"2025-08-19T10:16:14.708Z\",\n        \"createdBy\": \"a28cf15d-f5e9-4647-b03e-bfe8c352c656\",\n        \"updatedBy\": \"a28cf15d-f5e9-4647-b03e-bfe8c352c656\",\n        \"localizes\": [\n            {\n                \"id\": 125,\n                \"surveyId\": 52,\n                \"locale\": \"TH\",\n                \"title\": \"\",\n                \"description\": \"\",\n                \"consent\": \"\",\n                \"sortOrder\": 1,\n                \"status\": \"ACTIVE\",\n                \"createdAt\": \"2025-08-19T10:13:15.331Z\"\n            },\n            {\n                \"id\": 126,\n                \"surveyId\": 52,\n                \"locale\": \"EN\",\n                \"title\": \"\",\n                \"description\": \"\",\n                \"consent\": \"\",\n                \"sortOrder\": 2,\n                \"status\": \"ACTIVE\",\n                \"createdAt\": \"2025-08-19T10:13:15.331Z\"\n            },\n            {\n                \"id\": 127,\n                \"surveyId\": 52,\n                \"locale\": \"JP\",\n                \"title\": \"\",\n                \"description\": \"\",\n                \"consent\": \"\",\n                \"sortOrder\": 3,\n                \"status\": \"ACTIVE\",\n                \"createdAt\": \"2025-08-19T10:13:15.331Z\"\n            }\n        ],\n        \"privilege\": null,\n        \"predefinedQuestions\": [],\n        \"questions\": [\n            {\n                \"id\": 253,\n                \"sortOrder\": 1,\n                \"status\": \"ACTIVE\",\n                \"type\": \"RATING\",\n                \"isOptional\": false,\n                \"minAnswers\": 0,\n                \"maxAnswers\": 0,\n                \"minRating\": 1,\n                \"maxRating\": 5,\n                \"isConditionEnabled\": false,\n                \"isPredefined\": false,\n                \"predefinedQuestionId\": null,\n                \"predefinedLabel\": null,\n                \"referenceSurveyId\": null,\n                \"surveyId\": 52,\n                \"isNested\": false,\n                \"parentConditionId\": null,\n                \"createdAt\": \"2025-08-19T10:16:15.317Z\",\n                \"updatedAt\": \"2025-08-19T10:16:15.317Z\",\n                \"localizes\": [\n                    {\n                        \"id\": 510,\n                        \"questionId\": 253,\n                        \"locale\": \"TH\",\n                        \"text\": \"Question Rating  TH\",\n                        \"helperText\": null,\n                        \"sortOrder\": 1,\n                        \"status\": \"ACTIVE\",\n                        \"createdAt\": \"2025-08-19T10:16:15.317Z\"\n                    },\n                    {\n                        \"id\": 511,\n                        \"questionId\": 253,\n                        \"locale\": \"EN\",\n                        \"text\": \"Question Rating  EN\",\n                        \"helperText\": null,\n                        \"sortOrder\": 2,\n                        \"status\": \"ACTIVE\",\n                        \"createdAt\": \"2025-08-19T10:16:15.317Z\"\n                    },\n                    {\n                        \"id\": 512,\n                        \"questionId\": 253,\n                        \"locale\": \"JP\",\n                        \"text\": \"Question Rating  JP\",\n                        \"helperText\": null,\n                        \"sortOrder\": 3,\n                        \"status\": \"ACTIVE\",\n                        \"createdAt\": \"2025-08-19T10:16:15.317Z\"\n                    }\n                ],\n                \"choices\": [],\n                \"childConditions\": []\n            }\n        ],\n        \"campaigns\": []\n    }\n}\n\n// {\n//   \"name\": \"string\",\n//   \"startDate\": \"2025-08-16T00:00:00Z\",\n//   \"endDate\": \"2025-08-17T00:00:00Z\",\n//   \"status\": \"ACTIVE\",\n//   \"internetQuota\": 120,\n//   \"textColor\": \"string\",\n//   \"localizes\": [\n//     {\n//       \"locale\": \"EN\",\n//       \"title\": \"string\",\n//       \"description\": \"string\",\n//       \"consent\": \"string\",\n//       \"sortOrder\": 0,\n//       \"status\": \"ACTIVE\"\n//     }\n//   ],\n//   \"predefinedQuestions\": [\n//     {\n//       \"id\": 0,\n//       \"type\": \"SINGLE_CHOICE\",\n//       \"localizes\": [\n//         {\n//           \"id\": 0,\n//           \"questionId\": 0,\n//           \"locale\": \"TH\",\n//           \"text\": \"string\",\n//           \"helperText\": \"string\",\n//           \"sortOrder\": 0,\n//           \"status\": \"ACTIVE\"\n//         }\n//       ],\n//       \"choices\": [\n//         {\n//           \"id\": 0,\n//           \"code\": \"string\",\n//           \"localizes\": [\n//             {\n//               \"id\": 0,\n//               \"locale\": \"TH\",\n//               \"text\": \"string\",\n//               \"sortOrder\": 0,\n//               \"status\": \"ACTIVE\"\n//             }\n//           ],\n//           \"condition\": {\n//             \"id\": 0,\n//             \"label\": \"string\",\n//             \"questions\": [\n//               {}\n//             ],\n//             \"_tempId\": 0\n//           },\n//           \"enableFreeText\": true,\n//           \"sortOrder\": 0\n//         }\n//       ],\n//       \"sortOrder\": 0,\n//       \"status\": \"ACTIVE\",\n//       \"isOptional\": true,\n//       \"minAnswers\": 0,\n//       \"maxAnswers\": 0,\n//       \"minRating\": 0,\n//       \"maxRating\": 0,\n//       \"isConditionEnabled\": true,\n//       \"childConditions\": [\n//         {\n//           \"id\": 0,\n//           \"label\": \"string\",\n//           \"questions\": [\n//             {}\n//           ],\n//           \"_tempId\": 0\n//         }\n//       ],\n//       \"isPredefined\": true,\n//       \"predefinedQuestionId\": 0,\n//       \"surveyId\": 0,\n//       \"isNested\": true,\n//       \"conditionId\": 0\n//     }\n//   ]\n// }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/survey",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "survey"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ค้นหา survey 1",
+      "id": "7ebcc777-6750-43eb-b613-4f00531cf29c",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"For Test Survey\",\n    \"startDate\": \"2025-08-05T00:00:00Z\",\n    \"endDate\": \"2025-08-05T00:00:00Z\",\n    \"status\": \"ACTIVE\",\n    \"internetQuota\": 120,\n    \"localizes\": [\n        {\n            \"locale\": \"EN\",\n            \"title\": \"string\",\n            \"description\": \"string\",\n            \"consent\": \"string\",\n            \"sortOrder\": 0,\n            \"status\": \"ACTIVE\"\n        }\n    ],\n    \"predefinedQuestions\": [\n        \"Unknown Type: enum\"\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/survey/8",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "8"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง survey (ใช้ company id จาก scenario 1) startsurvey+6วัน Copy",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "19dbd56f-6f8b-4c81-9403-de41a2f6c64d",
+            "exec": [
+              "// ---- Helper function: format date with timezone +07:00 ----",
+              "function formatDate(offsetDays) {",
+              "    const date = new Date();",
+              "    date.setDate(date.getDate() + offsetDays);",
+              "",
+              "    const tzOffset = 7 * 60; // minutes",
+              "    const localISOTime = new Date(date.getTime() - (date.getTimezoneOffset() + tzOffset) * 60000)",
+              "        .toISOString()",
+              "        .slice(0, 19);",
+              "",
+              "    return `${localISOTime}+07:00`;",
+              "}",
+              "",
+              "// ---- Generate start & end date ----",
+              "const startDate = formatDate(-1);",
+              "const endDate = formatDate(6);",
+              "pm.environment.set(\"startDate\", startDate);",
+              "pm.environment.set(\"endDate\", endDate);",
+              "",
+              "// ---- Generate today variable for naming ----",
+              "const today = new Date();",
+              "const formattedToday = today.toISOString().slice(0, 10).replace(/-/g, '');",
+              "pm.environment.set(\"today\", formattedToday);",
+              "",
+              "// Log เพื่อดูค่าใน console",
+              "console.log(\"StartDate:\", startDate);",
+              "console.log(\"EndDate:\", endDate);",
+              "console.log(\"Today:\", formattedToday);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "8ffcf550-6819-496b-9549-b54d16f2b0ef",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": null,\n    \"code\": \"\",\n      \"name\": \"Survey test {{today}}\",\n    \"status\": \"DRAFT\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"companyId\": \"k7DK\",\n    \"company\": null,\n    \"requestEmail\": false,\n    \"requestMobile\": false,\n    \"internetQuota\": 120,\n    \"emailFrom\": null,\n    \"emailReplyTo\": null,\n    \"predefinedQuestions\": [],\n    \"logoUrl\": null,\n    \"backgroundUrl\": null,\n    \"colorScheme\": null,\n    \"textColor\": \"#000000\",\n    \"hasWelcomePage\": true,\n    \"hasIntroPage\": true,\n    \"hasConfirmSubmitPage\": false,\n    \"localizes\": [\n        {\n            \"locale\": \"TH\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"consent\": \"\",\n            \"sortOrder\": 1,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"locale\": \"EN\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"consent\": \"\",\n            \"sortOrder\": 2,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"locale\": \"JP\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"consent\": \"\",\n            \"sortOrder\": 3,\n            \"status\": \"DRAFT\"\n        }\n    ],\n    \"questions\": [],\n    \"publishedAt\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

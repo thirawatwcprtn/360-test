@@ -1,0 +1,146 @@
+{
+  "info": {
+    "_postman_id": "2074b82c-9965-4a79-a80f-264c823eb8e6",
+    "name": "Employee",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ค้นหา employeeทั้งหมด",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "f9ec7d91-e104-4ed8-a62a-72c3432ec3b5",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "5e18afa4-1306-42c1-b549-59b1fac7559b",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee-reviews/reviewers",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "reviewers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างemployee 1 คน email ไม่ตรงformat",
+      "id": "51d94f7a-dc6d-4bcc-a299-d4ea41c4b95c",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companyId\": \"lGX5\",\n  \"email\": \"!#$%^&**()_+#@company.co.th\",\n  \"firstname\": \"JayJay\",\n  \"lastname\": \"Doe\",\n  \"middlename\": \"Boonlong\",\n  \"phone\": \"+66-8-123-4567\",\n  \"departmentId\": \"\",\n  \"positionId\": \"\",\n  \"departmentName\": \"Engineering\",\n  \"positionName\": \"Senior Software Engineer\",\n  \"preferredLocale\": \"EN\",\n  \"metadata\": {\n    \"startDate\": \"2024-01-01\",\n    \"skills\": [\n      \"TypeScript\",\n      \"React\"\n    ]\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ทดสอบสร้างbulk employee",
+      "id": "d9d63e79-ad01-4fba-9217-370fa7d34ce9",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employees\": [\n    {\n      \"companyId\": \"{{company_id}}\",\n      \"email\": \"thirawat.w@relearnsolution.co.th\",\n      \"firstname\": \"Thirawat\",\n      \"lastname\": \"W\",\n      \"middlename\": \"\",\n      \"phone\": \"+66-8-123-4567\",\n      \"departmentId\": \"dept123\",\n      \"positionId\": \"pos123\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"QA\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2024-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    },\n    {\n      \"companyId\": \"{{company_id}}\",\n      \"email\": \"thitiwut.e@relearnsolution.co.th\",\n      \"firstname\": \"Thitiwut\",\n      \"lastname\": \"E\",\n      \"middlename\": \"\",\n      \"phone\": \"+66-8-234-5678\",\n      \"departmentId\": \"dept123\",\n      \"positionId\": \"pos124\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Dev\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2024-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    },\n    {\n      \"companyId\": \"{{company_id}}\",\n      \"email\": \"supakorn.p@relearnsolution.co.th\",\n      \"firstname\": \"Supakorn\",\n      \"lastname\": \"P\",\n      \"middlename\": \"\",\n      \"phone\": \"+66-8-345-6789\",\n      \"departmentId\": \"dept123\",\n      \"positionId\": \"pos125\",\n      \"departmentName\": \"Engineering\",\n      \"positionName\": \"Dev\",\n      \"preferredLocale\": \"EN\",\n      \"metadata\": {\n        \"startDate\": \"2024-01-01\",\n        \"skills\": [\n          \"TypeScript\",\n          \"React\"\n        ]\n      }\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee/bulk/create",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

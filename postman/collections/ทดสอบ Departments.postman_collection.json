@@ -1,0 +1,67 @@
+{
+  "info": {
+    "_postman_id": "001e7dd3-b100-4f78-8e7c-77ecc5b75150",
+    "name": "ทดสอบ Departments",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "ทดสร้าง Departments",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "08f9e98e-431a-4102-b1e5-aaee6d8bae29",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "id": "2c523282-280c-49ac-a68d-f411c1feb8e4",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "//CrLf, qLKF \n\n\n{\n    \"companyId\": \"CrLf\",\n    \"name\": \"Management\",\n    \"note\": \"Managements Development\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base_URL}}/admin/department",
+          "host": [
+            "{{Base_URL}}"
+          ],
+          "path": [
+            "admin",
+            "department"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -1,0 +1,915 @@
+{
+  "info": {
+    "_postman_id": "9721c76d-ae1d-4517-86b9-a73c0610e5fe",
+    "name": "API create Edit patch Copy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login and get token Copy 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "pm.environment.set(\"token\", pm.response.json().data.token)",
+              "",
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"TC2: Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"TC3: Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"TC4: Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"TC5: Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC6: Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC7 :Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              "pm.test(\"TC8: Response has non-empty token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"data\");",
+              "    pm.expect(jsonData.data).to.have.property(\"token\");",
+              "    ",
+              "    const token = jsonData.data.token;",
+              "    pm.expect(token).to.be.a(\"string\").and.not.empty;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8bf01559-97b3-4fb7-9feb-04f99b41e332",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "70c6f7ba-ebd3-4d53-bf42-1874975bb7f5",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\n//   \"username\": \"admin-rl\",\n//   \"password\": \"1234\"\n// }\n\n// Env_Mink\n// {\n//   \"username\": \"admin\",\n//   \"password\": \"admin12345678\"\n// }\n{\n//   \"username\": \"admin\",\n//   \"password\": \"test1234\"\n\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n\n}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/auth/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง survey (ใช้ company id จาก scenario 1) startdate survey+6วัน Copy",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "19dbd56f-6f8b-4c81-9403-de41a2f6c64d",
+            "exec": [
+              "// ---- Helper function: format date with timezone +07:00 ----",
+              "function formatDate(offsetDays) {",
+              "    const date = new Date();",
+              "    date.setDate(date.getDate() + offsetDays);",
+              "",
+              "    const tzOffset = 7 * 60; // minutes",
+              "    const localISOTime = new Date(date.getTime() - (date.getTimezoneOffset() + tzOffset) * 60000)",
+              "        .toISOString()",
+              "        .slice(0, 19);",
+              "",
+              "    return `${localISOTime}+07:00`;",
+              "}",
+              "",
+              "// ---- Generate start & end date ----",
+              "const startDate = formatDate(-1);",
+              "const endDate = formatDate(6);",
+              "pm.environment.set(\"startDate\", startDate);",
+              "pm.environment.set(\"endDate\", endDate);",
+              "",
+              "// ---- Generate today variable for naming ----",
+              "const today = new Date();",
+              "const formattedToday = today.toISOString().slice(0, 10).replace(/-/g, '');",
+              "pm.environment.set(\"today\", formattedToday);",
+              "",
+              "// Log เพื่อดูค่าใน console",
+              "console.log(\"StartDate:\", startDate);",
+              "console.log(\"EndDate:\", endDate);",
+              "console.log(\"Today:\", formattedToday);",
+              "",
+              "// timestamp ของ survey",
+              "const now = new Date();",
+              "const timeOnly =",
+              "  String(now.getHours()).padStart(2, '0') + \":\" +",
+              "  String(now.getMinutes()).padStart(2, '0');",
+              "",
+              "pm.environment.set(\"timestamp\", timeOnly);",
+              "console.log(\"เวลาปัจจุบัน:\", timeOnly);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "9ba0e12d-52c7-437b-aa76-5265a395b6b7",
+            "exec": [
+              "",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "// ตรวจสอบว่ามี id กลับมาหรือไม่",
+              "pm.test(\"สร้าง survey สำเร็จและมี id กลับมา\", function () {",
+              "    pm.expect(jsonData.data.id).to.exist;",
+              "});",
+              "",
+              "// เก็บ survey_id ไว้ใน environment variable",
+              "pm.environment.set(\"survey_id\", jsonData.data.id);",
+              "",
+              "console.log(\"Survey ID ที่สร้างได้:\", jsonData.data.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "6d4e09bd-48c1-4e5e-846f-6be706bf8a54",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": null,\n    \"code\": \"\",\n      \"name\": \"Survey test {{today}} {{timestamp}}\",\n    \"status\": \"DRAFT\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    // \"companyId\": \"skmw\",\n    \"companyId\": \"{{company_id}}\",\n    \"company\": null,\n    \"requestEmail\": false,\n    \"requestMobile\": false,\n    \"internetQuota\": 120,\n    \"emailFrom\": null,\n    \"emailReplyTo\": null,\n    \"predefinedQuestions\": [],\n    \"logoUrl\": null,\n    \"backgroundUrl\": null,\n    \"colorScheme\": \"red\",\n    \"textColor\": \"#000000\",\n    \"hasWelcomePage\": true,\n    \"hasIntroPage\": true,\n    \"hasConfirmSubmitPage\": true,\n    \"localizes\": [\n        {\n            \"locale\": \"TH\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"consent\": \"\",\n            \"sortOrder\": 1,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"locale\": \"EN\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"consent\": \"\",\n            \"sortOrder\": 2,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"locale\": \"JP\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"consent\": \"\",\n            \"sortOrder\": 3,\n            \"status\": \"DRAFT\"\n        }\n    ],\n    \"questions\": [],\n    \"publishedAt\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้างคำถามratingจำนวน 2 คำถาม Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"Questions added successfully\", function () {",
+              "    pm.expect(pm.response.json().data.message).to.eql(\"Questions added successfully\");",
+              "});",
+              "pm.test(\"สร้างคำถาม จำนวน 2 คำถาม Number of questions added is 2\", function () {",
+              "    pm.expect(pm.response.json().data.questionsAdded).to.eql(2);",
+              "});",
+              "",
+              "pm.test(\"สร้างคำถาม จำนวน 2 คำถาม Number of questions added is 2\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.questionsAdded).to.eql(2);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "729ff267-33d2-453a-b84c-67177775a349",
+            "exec": [
+              "pm.environment.get(\"survey_id\")",
+              "pm.environment.get(\"company_id\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "ae8b840f-42ed-4636-8d4e-914f1bc39210",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"questions\": [\n        {\n            \"sortOrder\": 1,\n            \"type\": \"RATING\",\n            \"isOptional\": true,\n            \"minAnswers\": 0,\n            \"maxAnswers\": 0,\n            \"minRating\": 1,\n            \"maxRating\": 5,\n            \"isConditionEnabled\": false,\n            \"localizes\": [\n                {\n                    \"locale\": \"EN\",\n                    \"text\": \"The CA understands the job requirements and client expectations clearly.\",\n                    \"helperText\": \"1 = Very Dissatisfied, 5 = Very Satisfied\",\n                    \"sortOrder\": 1,\n                    \"status\": \"ACTIVE\"\n                },\n                {\n                    \"locale\": \"TH\",\n                    \"text\": \"CA เข้าใจข้อกำหนดของงานและความคาดหวังของลูกค้าอย่างชัดเจน\",\n                    \"helperText\": \"1 = ไม่พึงพอใจมาก, 5 = พึงพอใจมาก\",\n                    \"sortOrder\": 2,\n                    \"status\": \"ACTIVE\"\n                }\n            ],\n            \"choices\": [\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"ไม่พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Very Dissatisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 1,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีโอกาสพัฒนา\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Dissatisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 2,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีความสามารถ\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Neutral\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 3,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"จุดแข็ง\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Satisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 4,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Very Satisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 5,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                }\n            ],\n            \"childConditions\": [],\n            \"status\": \"ACTIVE\",\n            \"isPredefined\": false,\n            \"predefinedQuestionId\": null,\n            \"surveyId\": \"{{survey_id}}\",\n            \"isNested\": false,\n            \"conditionId\": null,\n            \"predefinedLabel\": null\n        },\n        {\n            \"sortOrder\": 2,\n            \"type\": \"RATING\",\n            \"isOptional\": true,\n            \"minAnswers\": 0,\n            \"maxAnswers\": 0,\n            \"minRating\": 1,\n            \"maxRating\": 5,\n            \"isConditionEnabled\": false,\n            \"localizes\": [\n                {\n                    \"locale\": \"EN\",\n                    \"text\": \"The CA prepares the candidate well before interviews.\",\n                    \"helperText\": \"1 = Very Dissatisfied, 5 = Very Satisfied\",\n                    \"sortOrder\": 1,\n                    \"status\": \"ACTIVE\"\n                },\n                {\n                    \"locale\": \"TH\",\n                    \"text\": \"CA เตรียมตัวผู้สมัครเป็นอย่างดีก่อนการสัมภาษณ์\",\n                    \"helperText\": \"1 = ไม่พึงพอใจมาก, 5 = พึงพอใจมาก\",\n                    \"sortOrder\": 2,\n                    \"status\": \"ACTIVE\"\n                }\n            ],\n            \"choices\": [\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \" ไม่พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \" Very Dissatisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 1,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีโอกาสพัฒนา\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Dissatisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 2,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีความสามารถ\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Neutral\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 3,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"จุดแข็ง\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Satisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 4,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Very Satisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 5,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                }\n            ],\n            \"childConditions\": [],\n            \"status\": \"ACTIVE\",\n            \"isPredefined\": false,\n            \"predefinedQuestionId\": null,\n            \"surveyId\": \"{{survey_id}}\",\n            \"isNested\": false,\n            \"conditionId\": null,\n            \"predefinedLabel\": null\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/bulk-questions",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "bulk-questions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้างคำถามratingจำนวน 2 คำถาม Copy 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"Questions added successfully\", function () {",
+              "    pm.expect(pm.response.json().data.message).to.eql(\"Questions added successfully\");",
+              "});",
+              "pm.test(\"สร้างคำถาม จำนวน 2 คำถาม Number of questions added is 2\", function () {",
+              "    pm.expect(pm.response.json().data.questionsAdded).to.eql(2);",
+              "});",
+              "",
+              "pm.test(\"สร้างคำถาม จำนวน 2 คำถาม Number of questions added is 2\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.questionsAdded).to.eql(2);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "729ff267-33d2-453a-b84c-67177775a349",
+            "exec": [
+              "pm.environment.get(\"survey_id\")",
+              "pm.environment.get(\"company_id\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "d3fd3d8e-0aa2-4848-a030-ce3e7ddfb64e",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"questions\": [\n        {\n            \"sortOrder\": 1,\n            \"type\": \"RATING\",\n            \"isOptional\": true,\n            \"minAnswers\": 0,\n            \"maxAnswers\": 0,\n            \"minRating\": 1,\n            \"maxRating\": 5,\n            \"isConditionEnabled\": false,\n            \"localizes\": [\n                {\n                    \"locale\": \"EN\",\n                    \"text\": \"The CA understands the job requirements and client expectations clearly.\",\n                    \"helperText\": \"1 = Very Dissatisfied, 5 = Very Satisfied\",\n                    \"sortOrder\": 1,\n                    \"status\": \"ACTIVE\"\n                },\n                {\n                    \"locale\": \"TH\",\n                    \"text\": \"CA เข้าใจข้อกำหนดของงานและความคาดหวังของลูกค้าอย่างชัดเจน\",\n                    \"helperText\": \"1 = ไม่พึงพอใจมาก, 5 = พึงพอใจมาก\",\n                    \"sortOrder\": 2,\n                    \"status\": \"ACTIVE\"\n                }\n            ],\n            \"choices\": [\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \" ไม่พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Test A\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 1,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีโอกาสพัฒนา\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Test B\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 2,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีความสามารถ\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Test C\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 3,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"จุดแข็ง\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Test D\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 4,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Test E\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 5,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                }\n            ],\n            \"childConditions\": [],\n            \"status\": \"ACTIVE\",\n            \"isPredefined\": false,\n            \"predefinedQuestionId\": null,\n            \"surveyId\": \"{{survey_id}}\",\n            \"isNested\": false,\n            \"conditionId\": null,\n            \"predefinedLabel\": null\n        },\n        {\n            \"sortOrder\": 2,\n            \"type\": \"RATING\",\n            \"isOptional\": true,\n            \"minAnswers\": 0,\n            \"maxAnswers\": 0,\n            \"minRating\": 1,\n            \"maxRating\": 5,\n            \"isConditionEnabled\": false,\n            \"localizes\": [\n                {\n                    \"locale\": \"EN\",\n                    \"text\": \"The CA prepares the candidate well before interviews.\",\n                    \"helperText\": \"1 = Very Dissatisfied, 5 = Very Satisfied\",\n                    \"sortOrder\": 1,\n                    \"status\": \"ACTIVE\"\n                },\n                {\n                    \"locale\": \"TH\",\n                    \"text\": \"CA เตรียมตัวผู้สมัครเป็นอย่างดีก่อนการสัมภาษณ์\",\n                    \"helperText\": \"1 = ไม่พึงพอใจมาก, 5 = พึงพอใจมาก\",\n                    \"sortOrder\": 2,\n                    \"status\": \"ACTIVE\"\n                }\n            ],\n            \"choices\": [\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \" ไม่พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \" Very Dissatisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 1,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 1,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีโอกาสพัฒนา\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Dissatisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 2,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 2,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"มีความสามารถ\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Neutral\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 3,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 3,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"จุดแข็ง\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Satisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 4,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 4,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                },\n                {\n                    \"code\": null,\n                    \"localizes\": [\n                        {\n                            \"locale\": \"TH\",\n                            \"text\": \"พึงพอใจมาก\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        },\n                        {\n                            \"locale\": \"EN\",\n                            \"text\": \"Very Satisfied\",\n                            \"helperText\": \"\",\n                            \"sortOrder\": 5,\n                            \"status\": \"ACTIVE\"\n                        }\n                    ],\n                    \"sortOrder\": 5,\n                    \"enableFreeText\": false,\n                    \"condition\": null\n                }\n            ],\n            \"childConditions\": [],\n            \"status\": \"ACTIVE\",\n            \"isPredefined\": false,\n            \"predefinedQuestionId\": null,\n            \"surveyId\": \"{{survey_id}}\",\n            \"isNested\": false,\n            \"conditionId\": null,\n            \"predefinedLabel\": null\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/bulk-questions",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "bulk-questions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง emailtemplate  INVITATION Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "pm.test"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "fdbc175b-6001-4b96-93b9-cd6b413a761f",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailType\": \"INVITATION\",\n    \"isActive\": true,\n    \"localizes\": [\n        {\n            \"id\": 0,\n            \"locale\": \"TH\",\n            \"subject\": \"[เชิญทำแบบสอบถาม] กรุณาทำแบบสอบถาม {survey_name}\",\n            \"body\": \"<p>ชื่อของแบบสอบถาม:{survey_name}</p><p>ลิงค์: {survey_url}</p><p>ชื่อบริษัท:{company_name}</p><p>เรียกผู้ประเมิน: {evaluator_name}</p><p>ผู้ถูกประเมิน: {all_evaluatee_names}</p><p>จำนวนคนที่ถูกประเมิน: {evaluatee_count}</p><p>วันสิ้นสุดแบบสอบถาม:{due_date} {Due_Date}</p><p>เหลือเวลาทำแบบประเมินกี่วัน{remaining_days}</p>\",\n            \"templateType\": \"HTML\",\n            \"sortOrder\": 1,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"id\": 0,\n            \"locale\": \"EN\",\n            \"subject\": \"[INVITATION] Would you mind sparing a little bit of your time to answer this survey questionnaires? {survey_name} \",\n            \"body\": \"<p>Please Complete the questionnaire name: {survey_name}</p><p>Survey Name: {survey_name}</p><p>Company Name: {company_name}</p><p>Link: {survey_url}</p><p>Evaluator Name: {evaluator_name}</p><p>All Evaluatee Names: {all_evaluatee_names}</p><p>Evaluatee Count: {evaluatee_count}</p><p>Due Date: {due_date}</p><p>Remaining Days: {remaining_days}</p>\",\n            \"templateType\": \"HTML\",\n            \"sortOrder\": 2,\n            \"status\": \"ACTIVE\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/email-templates",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "email-templates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง emailtemplate  REMINDER Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "// ทดสอย UUID",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "1851ac3d-61a1-4045-9d2d-e15dce591711",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailType\": \"REMINDER\",\n    \"isActive\": true,\n    \"localizes\": [\n        {\n            \"id\": 0,\n            \"locale\": \"TH\",\n            \"subject\": \"[แจ้งเตือน] กรุณาทำแบบสอบถาม {survey_name}\",\n            \"body\": \"<p>ชื่อของแบบสอบถาม:{survey_name}</p><p>ลิงค์: {survey_url}</p><p>ชื่อบริษัท:{company_name}</p><p>เรียนทำผู้ประเมิน:{evaluator_name}</p><p>ผู้ถูกประเมิน: {all_evaluatee_names}</p><p>จำนวนคนที่ถูกประเมิน: {evaluatee_count}</p><p>วันสิ้นสุดแบบสอบถาม:{due_date}</p><p>เหลือกี่วัน{remaining_days}</p>\",\n            \"templateType\": \"HTML\",\n            \"sortOrder\": 1,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"id\": 0,\n            \"locale\": \"EN\",\n            \"subject\": \"[REMINDER] {survey_name} Please Take survey\",\n            \"body\": \"<p>Please Complete the questionnaire name: {survey_name}</p><p>Survey Name: {survey_name}</p><p>Company Name: {company_name}</p><p>Link: {survey_url}</p><p>Dear Evaluator Name: {evaluator_name}</p><p>All Evaluatee Names: {all_evaluatee_names}</p><p>Evaluatee Count: {evaluatee_count}</p><p>Due Date: {due_date}</p><p>Remaining Days: {remaining_days}</p>\",\n            \"templateType\": \"HTML\",\n            \"sortOrder\": 2,\n            \"status\": \"ACTIVE\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/email-templates",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "email-templates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง emailtemplate  THANK YOU Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "pm.test(\"active emailtemplate is true\", function () {",
+              "pm.expect(pm.response.json().data.isActive).to.eql('true')",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "bba9244d-c4ac-4e9a-9818-da7d7a781973",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailType\": \"THANK_YOU\",\n    \"isActive\": true,\n    \"localizes\": [\n        {\n            \"id\": 0,\n            \"locale\": \"TH\",\n            \"subject\": \"[ขอบคุณ] ขอบคุณสำหรับแบบสอบถาม {survey_name}\",\n            \"body\": \"<p>ขอบคุณสำหรับแบบสอบถาม {survey_name} {all_evaluatee_names}</p>\",\n            \"templateType\": \"HTML\",\n            \"sortOrder\": 1,\n            \"status\": \"ACTIVE\"\n        },\n        {\n            \"id\": 0,\n            \"locale\": \"EN\",\n            \"subject\": \"[Thank you] Thank You for Survey {survey_name}\",\n            \"body\": \"<p>Thank You for Survey {survey_name} {all_evaluatee_names}</p>\",\n            \"templateType\": \"HTML\",\n            \"sortOrder\": 2,\n            \"status\": \"ACTIVE\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/email-templates",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "email-templates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้างความสัมพันธ์ Assignment bulk upload 2reviewer 2 reviewee",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"Success is true\", function () {",
+              "    pm.expect(pm.response.json().data[0].success).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "40598667-ab90-41a5-8918-ac33943770c7",
+            "exec": [
+              "// pm.environment.get(\"survey_id\")",
+              "// pm.environment.get(\"company_id\")",
+              "// pm.environment.set(\"survey_id\", jsonData.data.id);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "42fa73f4-b960-4fe8-873b-4aa7ad8f5ff1",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"surveyId\": \"{{survey_id}}\",\n    \"companyId\": \"{{company_id}}\",\n    \"assignments\": [\n        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"sarunya.v@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"revieweeEmail\": \"sarunya.v@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"revieweeEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"reviewType\": \"SELF\"\n        }\n\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee-reviews/assignments/bulk/create",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "assignments",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "เพิ่ม email From และ emailReplayTo Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "6665aeba-4c08-40fd-b94e-d2b85ef2e0f4",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "5c47d84a-28c4-4d3e-b74f-2f4ee1063b4f",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"emailFrom\":\"relearn1@gmail.com\",\"emailReplyTo\":\"hr.relearn@gmail.com\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/email-settings",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "email-settings"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "activate survey Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "e0bbd4b8-3d8a-4541-9c3e-100cccc1c992",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "85fe4316-aec4-4d79-8cea-34629ec0f934",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{survey_id}}/activate",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{survey_id}}",
+            "activate"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "2a30b12b-3e1a-4dd1-a85b-df72abdf4401",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "abaaa437-5c32-4a9a-8cdc-850923dc6b87",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

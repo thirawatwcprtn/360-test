@@ -1,0 +1,483 @@
+{
+  "info": {
+    "_postman_id": "206a20ae-c84b-4ec4-9418-2ebf86d23737",
+    "name": "สร้าง company, department, postion, employee",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login and get token Copy 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "209eb509-e9af-4eea-a721-7c3a9026232a",
+            "exec": [
+              "pm.environment.set(\"token\", pm.response.json().data.token)",
+              "",
+              "pm.test(\"TC1: Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+              "});",
+              "",
+              "pm.test(\"TC2: Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"TC3: Status code name has string\", function () {",
+              "    pm.response.to.have.status(\"Created\");",
+              "});",
+              "",
+              "// Alternative 1: Token ใน Header",
+              "pm.test(\"TC4: Check token in response headers\", function () {",
+              "    const authHeader = pm.response.headers.get(\"Authorization\");",
+              "    const tokenHeader = pm.response.headers.get(\"X-Auth-Token\");",
+              "    ",
+              "    if (authHeader) {",
+              "        const token = authHeader.replace(\"Bearer \", \"\");",
+              "        pm.expect(token.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in Authorization header:\", token.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", token);",
+              "    }",
+              "    ",
+              "    if (tokenHeader) {",
+              "        pm.expect(tokenHeader.length).to.be.greaterThan(0);",
+              "        console.log(\"🔑 Token found in X-Auth-Token header:\", tokenHeader.length, \"chars\");",
+              "        pm.environment.set(\"auth_token\", tokenHeader);",
+              "    }",
+              "});",
+              "",
+              "// Alternative 2: Token ใน nested object",
+              "pm.test(\"TC5: Check token in nested response object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    // ตรวจสอบ patterns ต่างๆ ที่ token อาจอยู่",
+              "    const possiblePaths = [",
+              "        jsonData.token,",
+              "        jsonData.access_token,",
+              "        jsonData.accessToken,",
+              "        jsonData.auth_token,",
+              "        jsonData.authToken,",
+              "        jsonData.data?.token,",
+              "        jsonData.data?.access_token,",
+              "        jsonData.result?.token,",
+              "        jsonData.user?.token",
+              "    ];",
+              "    ",
+              "    let foundToken = null;",
+              "    let tokenPath = \"\";",
+              "    ",
+              "    possiblePaths.forEach((tokenValue, index) => {",
+              "        if (tokenValue && typeof tokenValue === 'string' && tokenValue.length > 0) {",
+              "            foundToken = tokenValue;",
+              "            const paths = ['token', 'access_token', 'accessToken', 'auth_token', 'authToken', 'data.token', 'data.access_token', 'result.token', 'user.token'];",
+              "            tokenPath = paths[index];",
+              "        }",
+              "    });",
+              "    ",
+              "    if (foundToken) {",
+              "        pm.expect(foundToken).to.not.be.empty;",
+              "        console.log(`🎯 Token found at: ${tokenPath}`);",
+              "        console.log(`📏 Token length: ${foundToken.length} characters`);",
+              "        pm.environment.set(\"auth_token\", foundToken);",
+              "    } else {",
+              "        pm.expect.fail(\"No token found in any expected location\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 🛡️ SECURITY VALIDATION",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC6: Token security validation\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        // ตรวจสอบว่าไม่ใช่ค่าที่เดาได้ง่าย",
+              "        const weakTokens = [\"test\", \"token\", \"123456\", \"password\", \"admin\", \"user\"];",
+              "        const isWeakToken = weakTokens.some(weak => token.toLowerCase().includes(weak.toLowerCase()));",
+              "        ",
+              "        // pm.expect(isWeakToken).to.be.false, \"Token should not contain common weak patterns\");",
+              "        ",
+              "        // ตรวจสอบ entropy (ความสุ่ม) พื้นฐาน",
+              "        const uniqueChars = [...new Set(token)].length;",
+              "        const entropyRatio = uniqueChars / token.length;",
+              "        ",
+              "        console.log(\"🛡️  Security Analysis:\");",
+              "        console.log(\"   - Unique characters:\", uniqueChars);",
+              "        console.log(\"   - Entropy ratio:\", entropyRatio.toFixed(2));",
+              "        console.log(\"   - Is strong token:\", entropyRatio > 0.5 ? \"Yes\" : \"No\");",
+              "        ",
+              "        pm.expect(entropyRatio).to.be.greaterThan(0.3, \"Token should have reasonable entropy\");",
+              "    }",
+              "});",
+              "",
+              "// ===========================================",
+              "// 📝 COMPREHENSIVE TOKEN REPORT",
+              "// ===========================================",
+              "",
+              "pm.test(\"TC7 :Generate token analysis report\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const token = jsonData.token || jsonData.access_token || jsonData.accessToken;",
+              "    ",
+              "    if (token) {",
+              "        const analysis = {",
+              "            present: true,",
+              "            length: token.length,",
+              "            type: token.includes('.') ? 'JWT' : 'Bearer',",
+              "            timestamp: new Date().toISOString(),",
+              "            first10chars: token.substring(0, 10) + '...',",
+              "            last10chars: '...' + token.substring(token.length - 10)",
+              "        };",
+              "        ",
+              "        console.log(\"📊 TOKEN ANALYSIS REPORT:\");",
+              "        console.log(JSON.stringify(analysis, null, 2));",
+              "        ",
+              "        // บันทึก analysis ใน environment",
+              "        pm.environment.set(\"token_analysis\", JSON.stringify(analysis));",
+              "        ",
+              "        pm.expect(analysis.present).to.be.true;",
+              "        pm.expect(analysis.length).to.be.greaterThan(0);",
+              "    }",
+              "});",
+              "pm.test(\"TC8: Response has non-empty token\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"data\");",
+              "    pm.expect(jsonData.data).to.have.property(\"token\");",
+              "    ",
+              "    const token = jsonData.data.token;",
+              "    pm.expect(token).to.be.a(\"string\").and.not.empty;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8bf01559-97b3-4fb7-9feb-04f99b41e332",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "1f9ef3a8-49e7-4a04-8cc5-c90d7d37be06",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "// {\n//   \"username\": \"admin-rl\",\n//   \"password\": \"1234\"\n// }\n\n// Env_Mink\n// {\n//   \"username\": \"admin\",\n//   \"password\": \"admin12345678\"\n// }\n{\n//   \"username\": \"admin\",\n//   \"password\": \"test1234\"\n\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n\n}\n\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/api/auth/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin survey Email Template API",
+      "id": "b746df36-232f-4438-8e11-6d888935a58d",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeEmail\": \"thirawat.w@relearnsolution.co.th\",\n  \"emailType\": \"INVITATION\",\n  \"templateType\": \"HTML\",\n  \"locale\": \"EN\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/{{surveyID}}/email-templates/force-send",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "{{surveyID}}",
+            "email-templates",
+            "force-send"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": "",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง company",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "876d50bb-9465-43ed-86f1-c4974925127c",
+            "exec": [
+              "// สร้างเลขสุ่มระหว่าง 100-999",
+              "let randomNum = Math.floor(Math.random() * 900) + 100;",
+              "",
+              "// สร้างค่า code แบบ \"2510-XXX\"",
+              "let code = `2510-${randomNum}`;",
+              "",
+              "// เก็บลง variable ของ Postman",
+              "pm.environment.set(\"randomCode\", code);",
+              "",
+              "// log ตรวจสอบ",
+              "console.log(\"Generated random code:\", code);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "e68f0299-0440-45fa-a9ca-3a0d6faa5c5a",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "0118ee6e-7656-4896-9657-516c90edb88a",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": {{randomCode}},\n  \"slug\": \"acme-corp\",\n  \"name\": {{$randomCompanyName}},\n  \"description\": \"Leading technology company\",\n  \"note\": \"Internal note about company\",\n  \"logoUrl\": \"string\",\n  \"phone\": {{$randomPhoneNumber}},\n  \"email\": \"contact@acme.co.th\",\n  \"website\": \"https://acme.co.th\",\n  \"metadata\": {\n    \"industry\": \"Technology\",\n    \"employees\": {{$randomAlphaNumeric}}\n  },\n  \"status\": \"ACTIVE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง Dapartment",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "876d50bb-9465-43ed-86f1-c4974925127c",
+            "exec": [
+              "// สร้างเลขสุ่มระหว่าง 100-999",
+              "let randomNum = Math.floor(Math.random() * 900) + 100;",
+              "",
+              "// สร้างค่า code แบบ \"2510-XXX\"",
+              "let code = `2510-${randomNum}`;",
+              "",
+              "// เก็บลง variable ของ Postman",
+              "pm.environment.set(\"randomCode\", code);",
+              "",
+              "// log ตรวจสอบ",
+              "console.log(\"Generated random code:\", code);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "8364ceef-a948-4dcc-baa0-e4bf5f4bde42",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companyId\": \"comp123\",\n  \"name\": \"Engineering\",\n  \"note\": \"Software development and engineering department\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง Employee",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "876d50bb-9465-43ed-86f1-c4974925127c",
+            "exec": [
+              "// สร้างเลขสุ่มระหว่าง 100-999",
+              "let randomNum = Math.floor(Math.random() * 900) + 100;",
+              "",
+              "// สร้างค่า code แบบ \"2510-XXX\"",
+              "let code = `2510-${randomNum}`;",
+              "",
+              "// เก็บลง variable ของ Postman",
+              "pm.environment.set(\"randomCode\", code);",
+              "",
+              "// log ตรวจสอบ",
+              "console.log(\"Generated random code:\", code);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "fbb07baa-7b15-4a55-b18f-6c4596c37b84",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companyId\": \"comp123\",\n  \"name\": \"Engineering\",\n  \"note\": \"Software development and engineering department\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "สร้าง Employee Bulk",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "876d50bb-9465-43ed-86f1-c4974925127c",
+            "exec": [
+              "// สร้างเลขสุ่มระหว่าง 100-999",
+              "let randomNum = Math.floor(Math.random() * 900) + 100;",
+              "",
+              "// สร้างค่า code แบบ \"2510-XXX\"",
+              "let code = `2510-${randomNum}`;",
+              "",
+              "// เก็บลง variable ของ Postman",
+              "pm.environment.set(\"randomCode\", code);",
+              "",
+              "// log ตรวจสอบ",
+              "console.log(\"Generated random code:\", code);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "c121c804-17df-40c2-9f31-9b914066b508",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"companyId\": \"comp123\",\n  \"name\": \"Engineering\",\n  \"note\": \"Software development and engineering department\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/company",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "company"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

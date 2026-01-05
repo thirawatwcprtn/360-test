@@ -1,0 +1,337 @@
+{
+  "info": {
+    "_postman_id": "f26b693a-b6bd-4ed8-9f3a-47dc1872d37c",
+    "name": "Download-raw-data",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "New Request",
+      "id": "d2ff03d4-9dbc-4748-99b0-78b6bf9bbb87",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{bearer_token_directus}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://relearn-directus.app9fun.com/items/Answer?aggregate[countDistinct][0]=id",
+          "protocol": "https",
+          "host": [
+            "relearn-directus",
+            "app9fun",
+            "com"
+          ],
+          "path": [
+            "items",
+            "Answer"
+          ],
+          "query": [
+            {
+              "key": "aggregate[countDistinct][0]",
+              "value": "id"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Directus",
+      "id": "714a3f68-1eb4-4708-9fdd-f8fa58ceadfc",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\":\"thirawat.w@relearnsolution.co.th\",\n    \"password\":\"tester12A\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://relearn-directus.app9fun.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "relearn-directus",
+            "app9fun",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://relearn-directus.app9fun.com/items/Answer?export=csv&sort=id&fields[]=choiceId&fields[]=freeText&fields[]=id&fie",
+      "id": "c639db38-3c0c-4f5f-abcb-d4cc34235d73",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "host",
+            "value": "relearn-directus.app9fun.com"
+          },
+          {
+            "key": "connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"macOS\""
+          },
+          {
+            "key": "upgrade-insecure-requests",
+            "value": "1"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+          },
+          {
+            "key": "accept",
+            "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "navigate"
+          },
+          {
+            "key": "sec-fetch-user",
+            "value": "?1"
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "document"
+          },
+          {
+            "key": "referer",
+            "value": "https://relearn-directus.app9fun.com/admin/content/Answer"
+          },
+          {
+            "key": "accept-encoding",
+            "value": "gzip, deflate, br, zstd"
+          },
+          {
+            "key": "accept-language",
+            "value": "en-US,en;q=0.9"
+          },
+          {
+            "key": "cookie",
+            "value": "rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2FF%2BbtXMisLQ6yt27CfEPKZqv4AWYVYU0A%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX19HIFH0mA1P9O6GUypLAMPO8K3PfTe7rxc%3D; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX182P0OCYMI1ocB9ZRvs0z8%2F0OS4yb1RUoknrMXrMUdahvbMCvaXCwGk9Ex1wHYoDCoV5zN0yyuXPA%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX1%2Bu7VErUFTpTJOaDW%2B68O%2Bcidd3JXCldElCnIFQqDi2QlichN780QAY9IPXTPdwJyPgkXQwPlfobqmVJmIsHGnX8od2FiuhQQ2HcGDVr4YhnhHGZ2OWw0lZmZJ5WP9YgHqCUdznfm1oZC0M7Plc9zRixkGTB2u2CiY%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX19L9zo%2FcDY6gZVpJuSFexzeAPyAta4o4yJBHJF%2Br8bTv1MLp0NMcHYkGzPV4PU2W3tgCjq9OSoO86NBuXALNjLm3wGt00MTprX8CoTPqn76iFAH7HdpmOqs8ixuyRC%2BOy36BlkbR5paaA%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%22ab86d07bf28d9f2c96154c2b982ee58a9e6a3a389f2942e6d3b82e425162cb93%235297d3dd-e91a-4d14-9a69-a63b475a470e%22%2C%22%24sesid%22%3A%5B1762918887125%2C%22019a7627-6ef0-7787-af7e-43545234c096%22%2C1762918887125%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Frelearn-n8n.app9fun.com%2Fsignup%3FinviterId%3D7cc10269-a00e-4cba-b719-eab3e36102bf%26inviteeId%3D5297d3dd-e91a-4d14-9a69-a63b475a470e%22%7D%7D; rl_session=RudderEncrypt%3AU2FsdGVkX1%2BzbQLsSY%2Be4vW9r9IQGtBsO5K4denZ3PCLC%2BI6%2FLsxhfMxotjcct%2FQH5Seu6WmsZXa0k0GSkhVQIWsqsFmwNzliumReBo6UUgqBkNtpOjqf%2Bf7qa8qixst%2BSvdFMuMJIy5%2FwVhT9wzQA%3D%3D; directus_session_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0NjE1NmM5LWE3ZTUtNDBkMi05YTAzLTQ2Yzk3YTY0NWI4YiIsInJvbGUiOiIyODVhZWUyNy01ZTRlLTRiZGUtYjQ0YS0xMTIwYzdkNDY1M2QiLCJhcHBfYWNjZXNzIjp0cnVlLCJhZG1pbl9hY2Nlc3MiOnRydWUsInNlc3Npb24iOiJJM0JZTk12VXlqcTEyeWU0RFh0VlliRlROYmMwRVYwRnJwTWJUV1hULVBkSHFLdGhYU0ZZNWZ2d0QzcW9yZTRUIiwiaWF0IjoxNzYyOTE5MTA0LCJleHAiOjE3NjMwMDU1MDQsImlzcyI6ImRpcmVjdHVzIn0.uVpg8v1eFMuoBfjKZnP06uUBLqRupIAUBKK19mFaakc"
+          },
+          {
+            "key": "x-postman-captr",
+            "value": "1189075"
+          }
+        ],
+        "url": {
+          "raw": "https://relearn-directus.app9fun.com/items/Answer?export=csv&sort=id&fields[]=choiceId&fields[]=freeText&fields[]=id&fields[]=questionId&fields[]=date&fields[]=ratingValue&fields[]=reviewAssignmentId&limit=1000",
+          "protocol": "https",
+          "host": [
+            "relearn-directus",
+            "app9fun",
+            "com"
+          ],
+          "path": [
+            "items",
+            "Answer"
+          ],
+          "query": [
+            {
+              "key": "export",
+              "value": "csv"
+            },
+            {
+              "key": "sort",
+              "value": "id"
+            },
+            {
+              "key": "fields[]",
+              "value": "choiceId"
+            },
+            {
+              "key": "fields[]",
+              "value": "freeText"
+            },
+            {
+              "key": "fields[]",
+              "value": "id"
+            },
+            {
+              "key": "fields[]",
+              "value": "questionId"
+            },
+            {
+              "key": "fields[]",
+              "value": "date"
+            },
+            {
+              "key": "fields[]",
+              "value": "ratingValue"
+            },
+            {
+              "key": "fields[]",
+              "value": "reviewAssignmentId"
+            },
+            {
+              "key": "limit",
+              "value": "1000"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://relearn-directus.app9fun.com/items/Answer?export=csv&sort=id&fields[]=choiceId&fields[]=freeText&fields[]=id&fie Copy",
+      "id": "a181daa1-92a8-40a2-9a5b-fcd621adeb94",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0NjE1NmM5LWE3ZTUtNDBkMi05YTAzLTQ2Yzk3YTY0NWI4YiIsInJvbGUiOiIyODVhZWUyNy01ZTRlLTRiZGUtYjQ0YS0xMTIwYzdkNDY1M2QiLCJhcHBfYWNjZXNzIjp0cnVlLCJhZG1pbl9hY2Nlc3MiOnRydWUsImlhdCI6MTc2MjkzNzQxOCwiZXhwIjoxNzYyOTM4MzE4LCJpc3MiOiJkaXJlY3R1cyJ9.dl1-iFVZEn8VLxvwiF5rJSKKIXal9tQ_wdT2GplfH0E",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "host",
+            "value": "relearn-directus.app9fun.com"
+          },
+          {
+            "key": "connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"macOS\""
+          },
+          {
+            "key": "upgrade-insecure-requests",
+            "value": "1"
+          },
+          {
+            "key": "user-agent",
+            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+          },
+          {
+            "key": "accept",
+            "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+          },
+          {
+            "key": "sec-fetch-site",
+            "value": "same-origin"
+          },
+          {
+            "key": "sec-fetch-mode",
+            "value": "navigate"
+          },
+          {
+            "key": "sec-fetch-user",
+            "value": "?1"
+          },
+          {
+            "key": "sec-fetch-dest",
+            "value": "document"
+          },
+          {
+            "key": "referer",
+            "value": "https://relearn-directus.app9fun.com/admin/content/Answer"
+          },
+          {
+            "key": "accept-encoding",
+            "value": "gzip, deflate, br, zstd"
+          },
+          {
+            "key": "accept-language",
+            "value": "en-US,en;q=0.9"
+          },
+          {
+            "key": "cookie",
+            "value": "rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2FF%2BbtXMisLQ6yt27CfEPKZqv4AWYVYU0A%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX19HIFH0mA1P9O6GUypLAMPO8K3PfTe7rxc%3D; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX182P0OCYMI1ocB9ZRvs0z8%2F0OS4yb1RUoknrMXrMUdahvbMCvaXCwGk9Ex1wHYoDCoV5zN0yyuXPA%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX1%2Bu7VErUFTpTJOaDW%2B68O%2Bcidd3JXCldElCnIFQqDi2QlichN780QAY9IPXTPdwJyPgkXQwPlfobqmVJmIsHGnX8od2FiuhQQ2HcGDVr4YhnhHGZ2OWw0lZmZJ5WP9YgHqCUdznfm1oZC0M7Plc9zRixkGTB2u2CiY%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX19L9zo%2FcDY6gZVpJuSFexzeAPyAta4o4yJBHJF%2Br8bTv1MLp0NMcHYkGzPV4PU2W3tgCjq9OSoO86NBuXALNjLm3wGt00MTprX8CoTPqn76iFAH7HdpmOqs8ixuyRC%2BOy36BlkbR5paaA%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%22ab86d07bf28d9f2c96154c2b982ee58a9e6a3a389f2942e6d3b82e425162cb93%235297d3dd-e91a-4d14-9a69-a63b475a470e%22%2C%22%24sesid%22%3A%5B1762918887125%2C%22019a7627-6ef0-7787-af7e-43545234c096%22%2C1762918887125%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Frelearn-n8n.app9fun.com%2Fsignup%3FinviterId%3D7cc10269-a00e-4cba-b719-eab3e36102bf%26inviteeId%3D5297d3dd-e91a-4d14-9a69-a63b475a470e%22%7D%7D; rl_session=RudderEncrypt%3AU2FsdGVkX1%2BzbQLsSY%2Be4vW9r9IQGtBsO5K4denZ3PCLC%2BI6%2FLsxhfMxotjcct%2FQH5Seu6WmsZXa0k0GSkhVQIWsqsFmwNzliumReBo6UUgqBkNtpOjqf%2Bf7qa8qixst%2BSvdFMuMJIy5%2FwVhT9wzQA%3D%3D; directus_session_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0NjE1NmM5LWE3ZTUtNDBkMi05YTAzLTQ2Yzk3YTY0NWI4YiIsInJvbGUiOiIyODVhZWUyNy01ZTRlLTRiZGUtYjQ0YS0xMTIwYzdkNDY1M2QiLCJhcHBfYWNjZXNzIjp0cnVlLCJhZG1pbl9hY2Nlc3MiOnRydWUsInNlc3Npb24iOiJJM0JZTk12VXlqcTEyeWU0RFh0VlliRlROYmMwRVYwRnJwTWJUV1hULVBkSHFLdGhYU0ZZNWZ2d0QzcW9yZTRUIiwiaWF0IjoxNzYyOTE5MTA0LCJleHAiOjE3NjMwMDU1MDQsImlzcyI6ImRpcmVjdHVzIn0.uVpg8v1eFMuoBfjKZnP06uUBLqRupIAUBKK19mFaakc"
+          },
+          {
+            "key": "x-postman-captr",
+            "value": "1189075"
+          }
+        ],
+        "url": {
+          "raw": "https://relearn-directus.app9fun.com/items/SurveyResultView?filter[survey_name][_eq]=360%20Evaluation%20TEST_BOONG_FIN&filter[survey_locale][_eq]=EN&sort=survey_name,q.sortOrder,a.id&limit=1000&export=csv",
+          "protocol": "https",
+          "host": [
+            "relearn-directus",
+            "app9fun",
+            "com"
+          ],
+          "path": [
+            "items",
+            "SurveyResultView"
+          ],
+          "query": [
+            {
+              "key": "filter[survey_name][_eq]",
+              "value": "360%20Evaluation%20TEST_BOONG_FIN"
+            },
+            {
+              "key": "filter[survey_locale][_eq]",
+              "value": "EN"
+            },
+            {
+              "key": "sort",
+              "value": "survey_name,q.sortOrder,a.id"
+            },
+            {
+              "key": "limit",
+              "value": "1000"
+            },
+            {
+              "key": "export",
+              "value": "csv"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

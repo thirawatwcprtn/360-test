@@ -1,0 +1,385 @@
+{
+  "info": {
+    "_postman_id": "cd0c37b6-ecaf-4399-9211-75f901f274a9",
+    "name": "Token and email[cron-job]",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "get generate-tokens",
+      "id": "f557fda8-3cfa-4045-bbbf-173bc500449e",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/generate-tokens",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "generate-tokens"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-invitations",
+      "id": "ae0c9aa0-daa8-4646-a4f8-2ff66557d696",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/send-invitations",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "send-invitations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ตรวจสอบ email REMINDER",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "a1fdc5f0-5b60-4e9a-aa1b-0cb70e5447bf",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"ค่าของ Success เป็น true\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test(\"ค่า errorCount เท่ากับ 3 \", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.errorCount).to.be.eql(3);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "d6c74317-012a-4aaf-b240-2b35de348321",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/send-reminders",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "send-reminders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-deadline-warnings-ยังไม่ใช้งาน",
+      "id": "266c1f71-225e-43c1-9fc5-80ad7ade971b",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/send-deadline-warnings",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "send-deadline-warnings"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cleanup-data-ยังไม่ใช่งาน",
+      "id": "a15867b2-853c-46ad-a809-b4eaccb1e72a",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/cleanup-data",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "cleanup-data"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update-status-ยังไม่สามารถใช้งานได้",
+      "id": "05224ad3-d9ac-4a7c-9b4a-81df2caf0054",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/update-status",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "update-status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-thank-you",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "da81bb5c-73e2-4bc8-ba8f-74ccaaf50c24",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response structure is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"success\");",
+              "    pm.expect(jsonData).to.have.property(\"message\");",
+              "    pm.expect(jsonData).to.have.property(\"processedCount\");",
+              "    pm.expect(jsonData).to.have.property(\"errorCount\");",
+              "});",
+              "",
+              "pm.test(\"Email sending failed as expected\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(false);",
+              "    pm.expect(jsonData.errorCount).to.be.above(0);",
+              "    pm.expect(jsonData.details.surveysProcessed).to.eql(36);",
+              "});",
+              "",
+              "pm.test(\"ตรวจสอบเกี่ยวกับส่งอีเมลถ้าส่งผ่าน จะสามารถส่งได้\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    // ตรวจสอบว่ามีฟิลด์ success อยู่",
+              "    pm.expect(jsonData).to.have.property(\"success\");",
+              "",
+              "    // ถ้า success เป็น true ให้ทดสอบผ่าน",
+              "    if (jsonData.success === true) {",
+              "        pm.expect(jsonData.success).to.eql(true);",
+              "        console.log(\"✅ Email sending succeeded!\");",
+              "    } ",
+              "    // ถ้า success เป็น false ให้ทดสอบไม่ผ่าน",
+              "    else {",
+              "        console.error(\"❌ Email sending failed:\", jsonData.message);",
+              "        pm.expect(jsonData.success, \"Expected success = true but got false\").to.eql(true);",
+              "    }",
+              "});",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "f1f69462-5306-444a-9aa0-1337aa73cb8f",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/send-thank-you",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "send-thank-you"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send-thank-you Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "da81bb5c-73e2-4bc8-ba8f-74ccaaf50c24",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response time is less than 2000ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});",
+              "",
+              "pm.test(\"results generateTokens success is true\", function () {",
+              "    pm.expect(pm.response.json().results.generateTokens.success).to.be.true;",
+              "});",
+              "pm.test(\"results sendInvitations success is false\", function () {",
+              "    pm.collectionVariables.set(\"sendInvitations_success\", pm.response.json().results.sendInvitations.success);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "cc2dfb87-9738-4798-8288-d8c73769b72d",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/admin/survey/employee-feedback/cron-test/run-all",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "survey",
+            "employee-feedback",
+            "cron-test",
+            "run-all"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "e28112fb-b305-4029-ad75-ea23a601e7a7",
+      "key": "sendInvitations_success",
+      "value": ""
+    }
+  ]
+}

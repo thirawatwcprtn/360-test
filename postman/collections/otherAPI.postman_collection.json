@@ -1,0 +1,90 @@
+{
+  "info": {
+    "_postman_id": "f8db2865-694d-475b-aa2b-b01e9b47224c",
+    "name": "otherAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "สร้างความสัมพันธ์ Assignment bulk upload  2reviewer * 3 reviewee  tw6 sp3 te3",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "efdba5ab-1490-4209-b2c7-0a2d8dd1ee48",
+            "exec": [
+              "pm.environment.set(\"survey_id\", jsonData.data.id);",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 500ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});",
+              "",
+              "pm.test(\"Success is true\", function () {",
+              "    pm.expect(jsonData.data[0].success).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "40598667-ab90-41a5-8918-ac33943770c7",
+            "exec": [
+              "pm.environment.get(\"survey_id\")",
+              "pm.environment.get(\"company_id\")",
+              "// pm.environment.set(\"survey_id\", jsonData.data.id);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "65aa438f-4cc7-4b99-96de-33d5e2e529ac",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"surveyId\": \"{{survey_id}}\",\n    \"companyId\": \"{{company_id}}\",\n    \"assignments\": [\n        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"sarunya.v@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"reviewType\": \"SELF\"\n        },\n        {\n            \"reviewerEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"revieweeEmail\": \"sarunya.v@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n                {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"jirapinya.m@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n                        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"sasicha.s@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n                        {\n            \"reviewerEmail\": \"thirawat.w@relearnsolution.co.th\",\n            \"revieweeEmail\": \"jiraporn.b@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"revieweeEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"reviewType\": \"MANAGER\"\n        },\n        {\n            \"reviewerEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"revieweeEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"reviewType\": \"SELF\"\n        },{\n            \"reviewerEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"revieweeEmail\": \"sarunya.v@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        },\n        {\n            \"reviewerEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"revieweeEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"reviewType\": \"SELF\"\n        },\n        {\n            \"reviewerEmail\": \"thitiwut.e@relearnsolution.co.th\",\n            \"revieweeEmail\": \"supakorn.p@relearnsolution.co.th\",\n            \"reviewType\": \"PEER\"\n        }\n\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/admin/employee-reviews/assignments/bulk/create",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "admin",
+            "employee-reviews",
+            "assignments",
+            "bulk",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

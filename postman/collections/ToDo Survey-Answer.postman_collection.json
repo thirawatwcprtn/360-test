@@ -1,0 +1,340 @@
+{
+  "info": {
+    "_postman_id": "4ccf8df7-7794-4966-9dc0-b9ffdf59c017",
+    "name": "ToDo Survey-Answer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "get Survey_Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1cff2be1-86b3-4e75-b9d3-f5947b7d85db",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "// Postman Test Script สำหรับค้นหาข้อมูลใน Survey JSON",
+              "",
+              "// รับ response body",
+              "const response = pm.response.json();",
+              "const survey = response.survey;",
+              "",
+              "console.log(\"=== ข้อมูลพื้นฐาน Survey ===\");",
+              "console.log(\"Survey ID:\", survey.id);",
+              "console.log(\"Survey Code:\", survey.code);",
+              "console.log(\"Survey Name:\", survey.name);",
+              "console.log(\"Status:\", survey.status);",
+              "console.log(\"Type:\", survey.type);",
+              "",
+              "// ค้นหาคำถามทั้งหมด",
+              "console.log(\"\\n=== คำถามทั้งหมด ===\");",
+              "survey.questions.forEach((q, index) => {",
+              "    console.log(`\\nคำถามที่ ${index + 1}:`);",
+              "    console.log(\"  ID:\", q.id);",
+              "    console.log(\"  Type:\", q.type);",
+              "    console.log(\"  Text:\", q.localizes[0].text);",
+              "    console.log(\"  Sort Order:\", q.sortOrder);",
+              "});",
+              "",
+              "// ค้นหาคำถามตาม ID",
+              "function findQuestionById(questionId) {",
+              "    return survey.questions.find(q => q.id === questionId);",
+              "}",
+              "",
+              "// ค้นหาคำถามที่มีข้อความ (ใช้ Regular Expression)",
+              "function searchQuestionByText(searchText) {",
+              "    return survey.questions.filter(q => ",
+              "        q.localizes[0].text.includes(searchText)",
+              "    );",
+              "}",
+              "",
+              "// ค้นหา Choice ตาม Choice ID",
+              "function findChoiceById(choiceId) {",
+              "    for (let q of survey.questions) {",
+              "        const choice = q.choices.find(c => c.id === choiceId);",
+              "        if (choice) return choice;",
+              "    }",
+              "    return null;",
+              "}",
+              "",
+              "// ตัวอย่างการใช้งาน",
+              "console.log(\"\\n=== ตัวอย่างการค้นหา ===\");",
+              "",
+              "// ค้นหาคำถาม ID 1319",
+              "const question1319 = findQuestionById(1319);",
+              "if (question1319) {",
+              "    console.log(\"\\nพบคำถาม ID 1319:\");",
+              "    console.log(\"  Text:\", question1319.localizes[0].text);",
+              "    console.log(\"  จำนวน Choices:\", question1319.choices.length);",
+              "}",
+              "",
+              "// ค้นหาคำถามที่มีคำว่า \"ลูกค้า\"",
+              "const customerQuestions = searchQuestionByText(\"ลูกค้า\");",
+              "console.log(`\\nพบ ${customerQuestions.length} คำถามที่เกี่ยวกับ \"ลูกค้า\"`);",
+              "",
+              "// ค้นหา Choice ID 5291",
+              "const choice = findChoiceById(5291);",
+              "if (choice) {",
+              "    console.log(\"\\nพบ Choice ID 5291:\");",
+              "    console.log(\"  Code:\", choice.code);",
+              "    console.log(\"  Text:\", choice.localizes[0].text);",
+              "}",
+              "",
+              "// นับสถิติ",
+              "console.log(\"\\n=== สถิติ ===\");",
+              "console.log(\"จำนวนคำถามทั้งหมด:\", survey.questions.length);",
+              "console.log(\"จำนวน Assignments:\", survey.totalAssignments);",
+              "console.log(\"Internet Quota:\", survey.internetQuota);",
+              "",
+              "// บันทึกค่าที่ต้องการไปใช้ใน request อื่น",
+              "pm.environment.set(\"surveyId\", survey.id);",
+              "pm.environment.set(\"surveyCode\", survey.code);",
+              "pm.environment.set(\"firstQuestionId\", survey.questions[0].id);",
+              "",
+              "// Validation Tests",
+              "pm.test(\"Survey status is ACTIVE\", () => {",
+              "    pm.expect(survey.status).to.equal(\"ACTIVE\");",
+              "});",
+              "",
+              "pm.test(\"Survey has questions\", () => {",
+              "    pm.expect(survey.questions.length).to.be.greaterThan(0);",
+              "});",
+              "",
+              "pm.test(\"All questions have choices\", () => {",
+              "    survey.questions.forEach(q => {",
+              "        pm.expect(q.choices.length).to.be.greaterThan(0);",
+              "    });",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "3aab1945-b0a5-40ba-94fe-9495e9a9f1de",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "https://feedback.surveylab.com/lng/en/pageTag/page:survey-already-completed-ending/cId/5993d048f51728a9e926ff65fec2c4bf61f0d13c81/",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURLSurvey}}/api/survey/ee12f015-e76e-4820-adcf-6826bb730336?locale=EN&status=ACTIVE&cache=true&isPreview=false",
+          "host": [
+            "{{BaseURLSurvey}}"
+          ],
+          "path": [
+            "api",
+            "survey",
+            "ee12f015-e76e-4820-adcf-6826bb730336"
+          ],
+          "query": [
+            {
+              "key": "locale",
+              "value": "EN"
+            },
+            {
+              "key": "status",
+              "value": "ACTIVE"
+            },
+            {
+              "key": "cache",
+              "value": "true"
+            },
+            {
+              "key": "isPreview",
+              "value": "false"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Answer",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1cff2be1-86b3-4e75-b9d3-f5947b7d85db",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response time is less than 200ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);",
+              "});",
+              "",
+              "// Postman Test Script สำหรับค้นหาข้อมูลใน Survey JSON",
+              "",
+              "// รับ response body",
+              "const response = pm.response.json();",
+              "const survey = response.survey;",
+              "",
+              "console.log(\"=== ข้อมูลพื้นฐาน Survey ===\");",
+              "console.log(\"Survey ID:\", survey.id);",
+              "console.log(\"Survey Code:\", survey.code);",
+              "console.log(\"Survey Name:\", survey.name);",
+              "console.log(\"Status:\", survey.status);",
+              "console.log(\"Type:\", survey.type);",
+              "",
+              "// ค้นหาคำถามทั้งหมด",
+              "console.log(\"\\n=== คำถามทั้งหมด ===\");",
+              "survey.questions.forEach((q, index) => {",
+              "    console.log(`\\nคำถามที่ ${index + 1}:`);",
+              "    console.log(\"  ID:\", q.id);",
+              "    console.log(\"  Type:\", q.type);",
+              "    console.log(\"  Text:\", q.localizes[0].text);",
+              "    console.log(\"  Sort Order:\", q.sortOrder);",
+              "});",
+              "",
+              "// ค้นหาคำถามตาม ID",
+              "function findQuestionById(questionId) {",
+              "    return survey.questions.find(q => q.id === questionId);",
+              "}",
+              "",
+              "// ค้นหาคำถามที่มีข้อความ (ใช้ Regular Expression)",
+              "function searchQuestionByText(searchText) {",
+              "    return survey.questions.filter(q => ",
+              "        q.localizes[0].text.includes(searchText)",
+              "    );",
+              "}",
+              "",
+              "// ค้นหา Choice ตาม Choice ID",
+              "function findChoiceById(choiceId) {",
+              "    for (let q of survey.questions) {",
+              "        const choice = q.choices.find(c => c.id === choiceId);",
+              "        if (choice) return choice;",
+              "    }",
+              "    return null;",
+              "}",
+              "",
+              "// ตัวอย่างการใช้งาน",
+              "console.log(\"\\n=== ตัวอย่างการค้นหา ===\");",
+              "",
+              "// ค้นหาคำถาม ID 1319",
+              "const question1319 = findQuestionById(1319);",
+              "if (question1319) {",
+              "    console.log(\"\\nพบคำถาม ID 1319:\");",
+              "    console.log(\"  Text:\", question1319.localizes[0].text);",
+              "    console.log(\"  จำนวน Choices:\", question1319.choices.length);",
+              "}",
+              "",
+              "// ค้นหาคำถามที่มีคำว่า \"ลูกค้า\"",
+              "const customerQuestions = searchQuestionByText(\"ลูกค้า\");",
+              "console.log(`\\nพบ ${customerQuestions.length} คำถามที่เกี่ยวกับ \"ลูกค้า\"`);",
+              "",
+              "// ค้นหา Choice ID 5291",
+              "const choice = findChoiceById(5291);",
+              "if (choice) {",
+              "    console.log(\"\\nพบ Choice ID 5291:\");",
+              "    console.log(\"  Code:\", choice.code);",
+              "    console.log(\"  Text:\", choice.localizes[0].text);",
+              "}",
+              "",
+              "// นับสถิติ",
+              "console.log(\"\\n=== สถิติ ===\");",
+              "console.log(\"จำนวนคำถามทั้งหมด:\", survey.questions.length);",
+              "console.log(\"จำนวน Assignments:\", survey.totalAssignments);",
+              "console.log(\"Internet Quota:\", survey.internetQuota);",
+              "",
+              "// บันทึกค่าที่ต้องการไปใช้ใน request อื่น",
+              "pm.environment.set(\"surveyId\", survey.id);",
+              "pm.environment.set(\"surveyCode\", survey.code);",
+              "pm.environment.set(\"firstQuestionId\", survey.questions[0].id);",
+              "",
+              "// Validation Tests",
+              "pm.test(\"Survey status is ACTIVE\", () => {",
+              "    pm.expect(survey.status).to.equal(\"ACTIVE\");",
+              "});",
+              "",
+              "pm.test(\"Survey has questions\", () => {",
+              "    pm.expect(survey.questions.length).to.be.greaterThan(0);",
+              "});",
+              "",
+              "pm.test(\"All questions have choices\", () => {",
+              "    survey.questions.forEach(q => {",
+              "        pm.expect(q.choices.length).to.be.greaterThan(0);",
+              "    });",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "25a196fc-2239-45e6-b79a-2c38f80bd958",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "https://feedback.surveylab.com/lng/en/pageTag/page:survey-already-completed-ending/cId/5993d048f51728a9e926ff65fec2c4bf61f0d13c81/",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURLSurvey}}/api/survey/ee12f015-e76e-4820-adcf-6826bb730336?locale=EN&status=ACTIVE&cache=true&isPreview=false",
+          "host": [
+            "{{BaseURLSurvey}}"
+          ],
+          "path": [
+            "api",
+            "survey",
+            "ee12f015-e76e-4820-adcf-6826bb730336"
+          ],
+          "query": [
+            {
+              "key": "locale",
+              "value": "EN"
+            },
+            {
+              "key": "status",
+              "value": "ACTIVE"
+            },
+            {
+              "key": "cache",
+              "value": "true"
+            },
+            {
+              "key": "isPreview",
+              "value": "false"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
